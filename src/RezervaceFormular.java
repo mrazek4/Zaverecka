@@ -25,6 +25,14 @@ public class RezervaceFormular extends JFrame {
             String telefon = telefonF.getText().trim();
             TypNavstevy typ = (TypNavstevy) typNavstevy.getSelectedItem();
             String termin = (String) terminy.getSelectedItem();
+            try {
+                int tel = Integer.parseInt(telefon);
+                Rezervace nova = new Rezervace(jmeno, "", email, tel); // zatím bez příjmení
+                RezervaceSpravce.pridatRezervaci(nova);
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Telefonní číslo musí být číslo", "Chyba", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             if (jmeno.isEmpty() || email.isEmpty() || telefon.isEmpty() || typ == null || termin == null) {
                 JOptionPane.showMessageDialog(this, "Vyplňte prosím všechny pole", "Chyba", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -64,6 +72,5 @@ public class RezervaceFormular extends JFrame {
 
         add(panel);
     }
-
     }
 

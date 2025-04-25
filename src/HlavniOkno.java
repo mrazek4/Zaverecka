@@ -10,8 +10,7 @@ public class HlavniOkno extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        JPanel panel = new JPanel();
-
+        JPanel panel = new JPanel(new BorderLayout());
 
         JLabel nadpis = new JLabel("Vítejte v rezervačním systému", JLabel.CENTER);
         panel.add(nadpis, BorderLayout.NORTH);
@@ -20,33 +19,28 @@ public class HlavniOkno extends JFrame {
         JButton btnZobrazit = new JButton("Zobrazit rezervace");
         JButton btnPrihlasit = new JButton("Přihlásit se jako admin");
 
-
-
         JPanel tlacitkaPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
-
         tlacitkaPanel.add(btnRezervovat);
         tlacitkaPanel.add(btnZobrazit);
         tlacitkaPanel.add(btnPrihlasit);
 
         panel.add(tlacitkaPanel, BorderLayout.CENTER);
-
         add(panel);
+
+        // 💥 Tady přidáváš napojení na formulář
         btnRezervovat.addActionListener(e -> {
             RezervaceFormular formular = new RezervaceFormular();
             formular.setVisible(true);
         });
-        btnZobrazit.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, " ", "Info", JOptionPane.INFORMATION_MESSAGE);
-        });
 
-       btnPrihlasit.addActionListener(e -> {
+        btnPrihlasit.addActionListener(e -> {
             prihlasitAdmina();
         });
 
         btnZobrazit.addActionListener(e -> {
             if (jeAdminPrihlasen) {
-                RezervaceFormular rezervaceFormular = new RezervaceFormular();
-                rezervaceFormular.setVisible(true);
+                ZobrazitRezervace zobrazitRezervace = new ZobrazitRezervace();
+                zobrazitRezervace.setVisible(true);
             } else {
                 JOptionPane.showMessageDialog(this, "Přístup odepřen. Přihlaste se jako admin!", "Chyba", JOptionPane.ERROR_MESSAGE);
             }
@@ -78,5 +72,5 @@ public class HlavniOkno extends JFrame {
         }
 
 
-
-    }}
+    }
+}
