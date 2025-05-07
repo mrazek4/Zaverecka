@@ -3,15 +3,16 @@ public class Rezervace {
     private String prijmeni;
     private String email;
     private int telefonC;
+    private String termin;
 
     @Override
     public String toString() {
         return "Rezervace{" +
-                "jmeno='" + jmeno + '\'' +
-                ", prijmeni='" + prijmeni + '\'' +
-                ", email='" + email + '\'' +
+                "jmeno='" + jmeno +
+                ", prijmeni='" + prijmeni +
+                ", email='" + email +
                 ", telefonC=" + telefonC +
-                '}';
+                "termin" + termin;
     }
 
     public String getJmeno() {
@@ -29,11 +30,15 @@ public class Rezervace {
     public int getTelefonC() {
         return telefonC;
     }
+    public String getTermin() {
+        return termin;
+    }
 
-    public Rezervace(String jmeno, String prijmeni, String email, int telefonC) {
+    public Rezervace(String jmeno, String prijmeni, String email, int telefonC, String termin) {
         this.jmeno = jmeno;
         this.prijmeni = prijmeni;
         this.email = email;
         this.telefonC = telefonC;
+        this.termin = termin;
     }
 }

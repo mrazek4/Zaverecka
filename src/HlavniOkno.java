@@ -27,7 +27,7 @@ public class HlavniOkno extends JFrame {
         panel.add(tlacitkaPanel, BorderLayout.CENTER);
         add(panel);
 
-        // 💥 Tady přidáváš napojení na formulář
+        //  Tady přidáváš napojení na formulář
         btnRezervovat.addActionListener(e -> {
             RezervaceFormular formular = new RezervaceFormular();
             formular.setVisible(true);

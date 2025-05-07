@@ -16,8 +16,8 @@ public enum TypNavstevy {
 
     @Override
     public String toString() {
-        return "TypNavstevy{" +
-                "popis='" + popis + '\'' +
-                '}';
+        return "TypNavstevy" +
+                "popis" + popis;
+
     }
 }
