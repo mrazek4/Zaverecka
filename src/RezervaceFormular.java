@@ -2,25 +2,35 @@ import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Properties;
 import org.jdatepicker.impl.*;
 
-
 public class RezervaceFormular extends JFrame {
 
-    public RezervaceFormular() {
+    public RezervaceFormular(Uzivatel prihlasenyUzivatel) {
+        if (prihlasenyUzivatel == null) {
+            JOptionPane.showMessageDialog(this, "Pro vytvoření rezervace se musíte přihlásit!", "Nepřihlášen", JOptionPane.ERROR_MESSAGE);
+            dispose();
+            return;
+        }
+
         setTitle("Nová rezervace");
         setSize(400, 350);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        JTextField jmenoF = new JTextField(20);
-        JTextField emailF = new JTextField(20);
-        JTextField telefonF = new JTextField(20);
+        // ==== Uživatelská data z účtu ====
+        JTextField jmenoF = new JTextField(prihlasenyUzivatel.getJmeno(), 20);
+        JTextField emailF = new JTextField(prihlasenyUzivatel.getEmail(), 20);
+        JTextField telefonF = new JTextField(prihlasenyUzivatel.getTelefon(), 20);
+
+        jmenoF.setEditable(false);
+        emailF.setEditable(false);
+        telefonF.setEditable(false);
+
         JComboBox<TypNavstevy> typNavstevy = new JComboBox<>(TypNavstevy.values());
 
-        //Nastavení JDatePicker, delano pomoci chatGPT
+        // ==== Datum ====
         UtilDateModel model = new UtilDateModel();
         Properties p = new Properties();
         p.put("text.today", "Dnes");
@@ -29,38 +39,41 @@ public class RezervaceFormular extends JFrame {
         JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
         JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
 
-        // ==== Výběr času ====
+        // ==== Čas ====
         String[] casy = { "08:00", "09:00", "10:00", "11:00", "13:00", "14:00", "15:00" };
         JComboBox<String> casBox = new JComboBox<>(casy);
 
         JButton rezervovat = new JButton("Rezervovat");
         rezervovat.addActionListener(e -> {
-            String jmeno = jmenoF.getText().trim();
-            String email = emailF.getText().trim();
-            String telefon = telefonF.getText().trim();
-            TypNavstevy typ = (TypNavstevy) typNavstevy.getSelectedItem();
             Object vybraneDatum = datePicker.getModel().getValue();
             String cas = (String) casBox.getSelectedItem();
+            TypNavstevy typ = (TypNavstevy) typNavstevy.getSelectedItem();
 
-            if (jmeno.isEmpty() || email.isEmpty() || telefon.isEmpty() || typ == null || vybraneDatum == null || cas == null) {
+            if (vybraneDatum == null || cas == null || typ == null) {
                 JOptionPane.showMessageDialog(this, "Vyplňte prosím všechna pole", "Chyba", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            // Získání data ve formátu LocalDate
             java.util.Date selectedDate = (java.util.Date) vybraneDatum;
             LocalDate datum = new java.sql.Date(selectedDate.getTime()).toLocalDate();
             String formatovanyDatumCas = datum.format(DateTimeFormatter.ISO_DATE) + " " + cas;
 
+            // Kontrola duplicity
+            if (RezervaceSpravce.existujeRezervaceNaTermin(formatovanyDatumCas)) {
+                JOptionPane.showMessageDialog(this, "Na tento termín už existuje rezervace!", "Chyba", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
+            // Vytvoření rezervace
+            Rezervace novaRezervace = new Rezervace(
+                    prihlasenyUzivatel.getJmeno(),
+                    prihlasenyUzivatel.getPrijmeni(),
+                    prihlasenyUzivatel.getEmail(),
+                    Integer.parseInt(prihlasenyUzivatel.getTelefon()),
+                    formatovanyDatumCas
+            );
 
-            System.out.println("=== NOVÁ REZERVACE ===");
-            System.out.println("Jméno: " + jmeno);
-            System.out.println("E-mail: " + email);
-            System.out.println("Telefon: " + telefon);
-            System.out.println("Typ návštěvy: " + typ.name() + " (" + typ.getPopis() + ")");
-            System.out.println("Termín: " + formatovanyDatumCas);
-
+            RezervaceSpravce.pridatRezervaci(novaRezervace);
             JOptionPane.showMessageDialog(this, "Rezervace byla úspěšně vytvořena!");
             dispose();
         });
@@ -95,7 +108,7 @@ public class RezervaceFormular extends JFrame {
         add(panel);
     }
 
-    // Formátovač data pro JDatePicker
+    // Formatter pro datum
     public class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
         private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 

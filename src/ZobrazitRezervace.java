@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class ZobrazitRezervace extends JFrame {
 
-    public ZobrazitRezervace() {
+    public ZobrazitRezervace(Uzivatel prihlasenyUzivatel, boolean jeAdmin) {
         setTitle("Seznam rezervací");
         setSize(500, 400);
         setLocationRelativeTo(null);
@@ -13,21 +13,27 @@ public class ZobrazitRezervace extends JFrame {
         JTextArea textArea = new JTextArea();
         textArea.setEditable(false);
 
-        // Sem načteme všechny rezervace
         ArrayList<Rezervace> rezervaceList = RezervaceSpravce.getSeznamRezervaci();
+        StringBuilder sb = new StringBuilder();
 
         if (rezervaceList.isEmpty()) {
-            textArea.setText("Žádné rezervace nebyly nalezeny.");
+            sb.append("Žádné rezervace nebyly nalezeny.");
         } else {
-            StringBuilder sb = new StringBuilder();
             for (Rezervace r : rezervaceList) {
-                sb.append(r).append("\n\n");
+                // Pokud je admin, vypíše vše
+                // Pokud je pacient, vypíše jen jeho rezervace (podle e-mailu)
+                if (jeAdmin || (prihlasenyUzivatel != null && r.getEmail().equals(prihlasenyUzivatel.getEmail()))) {
+                    sb.append(r).append("\n\n");
+                }
             }
-            textArea.setText(sb.toString());
+
+            if (sb.length() == 0) {
+                sb.append("Nemáte žádné rezervace.");
+            }
         }
 
+        textArea.setText(sb.toString());
         JScrollPane scrollPane = new JScrollPane(textArea);
         add(scrollPane, BorderLayout.CENTER);
     }
 }
-
