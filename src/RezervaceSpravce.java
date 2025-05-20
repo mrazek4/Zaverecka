@@ -51,4 +51,18 @@ public class RezervaceSpravce {
         } catch (IOException e) {
             System.err.println("Chyba při načítání rezervací: " + e.getMessage());
         }
-}}
+}
+    public static void odstranitRezervaci(Rezervace r) {
+        seznamRezervaci.remove(r);
+    }
+    public static boolean jeDenPlneObsazen(String datum) {
+        int pocet = 0;
+        for (Rezervace r : seznamRezervaci) {
+            if (r.getTermin().startsWith(datum)) {
+                pocet++;
+            }
+        }
+        return pocet >= 7; // nebo kolik máš dostupných slotů
+    }
+
+}

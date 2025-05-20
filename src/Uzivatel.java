@@ -5,14 +5,16 @@ public class Uzivatel {
     private String telefon;
     private String heslo;
     private boolean jeAdmin;
+    private Pojistovna pojistovna;
 
-    public Uzivatel(String jmeno, String prijmeni, String email, String telefon, String heslo, boolean jeAdmin) {
+    public Uzivatel(String jmeno, String prijmeni, String email, String telefon, String heslo, boolean jeAdmin, Pojistovna pojistovna) {
         this.jmeno = jmeno;
         this.prijmeni = prijmeni;
         this.email = email;
         this.telefon = telefon;
         this.heslo = heslo;
         this.jeAdmin = jeAdmin;
+        this.pojistovna = pojistovna;
     }
 
     // Gettery
@@ -40,15 +42,19 @@ public class Uzivatel {
         return jeAdmin;
     }
 
-    // Pomocná metoda pro export do řádku v souboru
-    public String toFileString() {
-        return jmeno + ";" + prijmeni + ";" + email + ";" + telefon + ";" + heslo + ";" + jeAdmin;
+    public Pojistovna getPojistovna() {
+        return pojistovna;
     }
 
-    // Načtení uživatele ze souboru
+    // Zápis do souboru
+    public String toFileString() {
+        return jmeno + ";" + prijmeni + ";" + email + ";" + telefon + ";" + heslo + ";" + jeAdmin + ";" + pojistovna.name();
+    }
+
+    // Načtení ze souboru
     public static Uzivatel fromFileString(String radek) {
         String[] casti = radek.split(";");
-        if (casti.length != 6) return null;
+        if (casti.length != 7) return null;
 
         String jmeno = casti[0];
         String prijmeni = casti[1];
@@ -56,8 +62,9 @@ public class Uzivatel {
         String telefon = casti[3];
         String heslo = casti[4];
         boolean jeAdmin = Boolean.parseBoolean(casti[5]);
+        Pojistovna pojistovna = Pojistovna.valueOf(casti[6]);
 
-        return new Uzivatel(jmeno, prijmeni, email, telefon, heslo, jeAdmin);
+        return new Uzivatel(jmeno, prijmeni, email, telefon, heslo, jeAdmin, pojistovna);
     }
 
     @Override

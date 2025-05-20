@@ -3,6 +3,7 @@ import javax.swing.*;
 public class Spusteni {
 
     public void spusteni() {
+
         SwingUtilities.invokeLater(() -> {
             HlavniOkno okno = new HlavniOkno();
 

@@ -4,36 +4,51 @@ import java.util.ArrayList;
 
 public class ZobrazitRezervace extends JFrame {
 
+    private DefaultListModel<Rezervace> model;
+
     public ZobrazitRezervace(Uzivatel prihlasenyUzivatel, boolean jeAdmin) {
         setTitle("Seznam rezervací");
-        setSize(500, 400);
+        setSize(600, 400);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        JTextArea textArea = new JTextArea();
-        textArea.setEditable(false);
+        model = new DefaultListModel<>();
+        JList<Rezervace> seznam = new JList<>(model);
+        seznam.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane scrollPane = new JScrollPane(seznam);
 
-        ArrayList<Rezervace> rezervaceList = RezervaceSpravce.getSeznamRezervaci();
-        StringBuilder sb = new StringBuilder();
-
-        if (rezervaceList.isEmpty()) {
-            sb.append("Žádné rezervace nebyly nalezeny.");
-        } else {
-            for (Rezervace r : rezervaceList) {
-                // Pokud je admin, vypíše vše
-                // Pokud je pacient, vypíše jen jeho rezervace (podle e-mailu)
-                if (jeAdmin || (prihlasenyUzivatel != null && r.getEmail().equals(prihlasenyUzivatel.getEmail()))) {
-                    sb.append(r).append("\n\n");
-                }
-            }
-
-            if (sb.length() == 0) {
-                sb.append("Nemáte žádné rezervace.");
+        // Načíst rezervace
+        ArrayList<Rezervace> vsechny = RezervaceSpravce.getSeznamRezervaci();
+        for (Rezervace r : vsechny) {
+            // Admin vidí vše, pacient jen své
+            if (jeAdmin || (prihlasenyUzivatel != null && r.getEmail().equalsIgnoreCase(prihlasenyUzivatel.getEmail()))) {
+                model.addElement(r);
             }
         }
 
-        textArea.setText(sb.toString());
-        JScrollPane scrollPane = new JScrollPane(textArea);
-        add(scrollPane, BorderLayout.CENTER);
+        JPanel hlavniPanel = new JPanel(new BorderLayout());
+        hlavniPanel.add(scrollPane, BorderLayout.CENTER);
+
+        // Pokud je admin, přidáme tlačítko pro smazání
+        if (jeAdmin) {
+            JButton btnSmazat = new JButton("Zrušit vybranou rezervaci");
+            btnSmazat.addActionListener(e -> {
+                Rezervace vybrana = seznam.getSelectedValue();
+                if (vybrana != null) {
+                    int potvrzeni = JOptionPane.showConfirmDialog(this, "Opravdu chcete zrušit tuto rezervaci?", "Potvrdit", JOptionPane.YES_NO_OPTION);
+                    if (potvrzeni == JOptionPane.YES_OPTION) {
+                        RezervaceSpravce.odstranitRezervaci(vybrana);
+                        model.removeElement(vybrana);
+                        RezervaceSpravce.ulozitDoSouboru("rezervace.txt");
+                        JOptionPane.showMessageDialog(this, "Rezervace byla zrušena.");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Vyberte prosím rezervaci ke zrušení.");
+                }
+            });
+            hlavniPanel.add(btnSmazat, BorderLayout.SOUTH);
+        }
+
+        add(hlavniPanel);
     }
 }

@@ -27,6 +27,7 @@ public class HlavniOkno extends JFrame {
         JButton btnPrihlasitAdmin = new JButton("Přihlásit se jako admin");
         JButton btnPrihlasitPacient = new JButton("Přihlásit se jako pacient");
         JButton btnRegistrovat = new JButton("Registrovat se");
+        JButton btnOdhlasit = new JButton("Odhlasit se");
 
         JPanel tlacitkaPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 20));
         tlacitkaPanel.add(btnRezervovat);
@@ -34,6 +35,7 @@ public class HlavniOkno extends JFrame {
         tlacitkaPanel.add(btnPrihlasitAdmin);
         tlacitkaPanel.add(btnPrihlasitPacient);
         tlacitkaPanel.add(btnRegistrovat);
+        tlacitkaPanel.add(btnOdhlasit);
 
         panel.add(tlacitkaPanel, BorderLayout.CENTER);
         add(panel);
@@ -98,6 +100,17 @@ public class HlavniOkno extends JFrame {
         // Registrace pacienta
         btnRegistrovat.addActionListener(e -> {
             new RegistraceFormular(uzivatele).setVisible(true);
+        });
+        btnOdhlasit.addActionListener(e -> {
+            if (prihlasenyUzivatel == null && !jeAdminPrihlasen) {
+                JOptionPane.showMessageDialog(this, "Nejste přihlášen.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+            prihlasenyUzivatel = null;
+            jeAdminPrihlasen = false;
+
+            JOptionPane.showMessageDialog(this, "Byl jste úspěšně odhlášen.");
         });
     }
 
