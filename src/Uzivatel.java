@@ -34,6 +34,10 @@ public class Uzivatel {
         return telefon;
     }
 
+    public void setHeslo(String heslo) {
+        this.heslo = heslo;
+    }
+
     public String getHeslo() {
         return heslo;
     }

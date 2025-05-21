@@ -27,7 +27,7 @@ public class RezervaceFormular extends JFrame {
         emailF.setEditable(false);
         telefonF.setEditable(false);
 
-        JComboBox<TypNavstevy> typNavstevy = new JComboBox<>(TypNavstevy.values());
+        JComboBox<TypNavstevy> typNavstevyBox = new JComboBox<>(TypNavstevy.values());
 
         // === Datum ===
         UtilDateModel model = new UtilDateModel();
@@ -38,7 +38,11 @@ public class RezervaceFormular extends JFrame {
         JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
         JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
 
-        // === Kontrola obsazenosti dne ===
+        // === Čas ===
+        String[] casy = { "08:00", "09:00", "10:00", "11:00", "13:00", "14:00", "15:00" };
+        JComboBox<String> casBox = new JComboBox<>(casy);
+
+        // === Upozornění při výběru plného dne ===
         datePicker.addActionListener(e -> {
             Object vybraneDatum = datePicker.getModel().getValue();
             if (vybraneDatum != null) {
@@ -52,15 +56,11 @@ public class RezervaceFormular extends JFrame {
             }
         });
 
-        // === Čas ===
-        String[] casy = { "08:00", "09:00", "10:00", "11:00", "13:00", "14:00", "15:00" };
-        JComboBox<String> casBox = new JComboBox<>(casy);
-
         JButton rezervovat = new JButton("Rezervovat");
         rezervovat.addActionListener(e -> {
             Object vybraneDatum = datePicker.getModel().getValue();
             String cas = (String) casBox.getSelectedItem();
-            TypNavstevy typ = (TypNavstevy) typNavstevy.getSelectedItem();
+            TypNavstevy typ = (TypNavstevy) typNavstevyBox.getSelectedItem();
 
             if (vybraneDatum == null || cas == null || typ == null) {
                 JOptionPane.showMessageDialog(this, "Vyplňte prosím všechna pole", "Chyba", JOptionPane.ERROR_MESSAGE);
@@ -76,15 +76,22 @@ public class RezervaceFormular extends JFrame {
                 return;
             }
 
-            Rezervace novaRezervace = new Rezervace(
+            if (RezervaceSpravce.jeDenPlneObsazen(datum.format(DateTimeFormatter.ISO_DATE))) {
+                JOptionPane.showMessageDialog(this, "Tento den je již zcela obsazen!", "Chyba", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            Rezervace nova = new Rezervace(
                     prihlasenyUzivatel.getJmeno(),
                     prihlasenyUzivatel.getPrijmeni(),
                     prihlasenyUzivatel.getEmail(),
                     Integer.parseInt(prihlasenyUzivatel.getTelefon()),
-                    formatovanyDatumCas
+                    formatovanyDatumCas,
+                    typ
             );
 
-            RezervaceSpravce.pridatRezervaci(novaRezervace);
+            RezervaceSpravce.pridatRezervaci(nova);
+            RezervaceSpravce.ulozitDoSouboru("rezervace.txt");
             JOptionPane.showMessageDialog(this, "Rezervace byla úspěšně vytvořena!");
             dispose();
         });
@@ -105,7 +112,7 @@ public class RezervaceFormular extends JFrame {
         gbc.gridx = 1; panel.add(telefonF, gbc);
 
         gbc.gridx = 0; gbc.gridy++; panel.add(new JLabel("Typ návštěvy:"), gbc);
-        gbc.gridx = 1; panel.add(typNavstevy, gbc);
+        gbc.gridx = 1; panel.add(typNavstevyBox, gbc);
 
         gbc.gridx = 0; gbc.gridy++; panel.add(new JLabel("Datum:"), gbc);
         gbc.gridx = 1; panel.add(datePicker, gbc);
@@ -119,7 +126,7 @@ public class RezervaceFormular extends JFrame {
         add(panel);
     }
 
-    // === Vnitřní třída pro formátování datumu ===
+    // === Formátovač pro JDatePicker ===
     public class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
         private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
