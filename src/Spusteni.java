@@ -22,4 +22,5 @@ public class Spusteni {
 
             okno.setVisible(true);
         });
-    }}
+    }
+}

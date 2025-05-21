@@ -1,5 +1,5 @@
 public enum Pojistovna {
-    VZP ("Všeobecná zdravotní pojišťovna"),
+    VZP("Všeobecná zdravotní pojišťovna"),
     ZPMV("Zdravotní pojišťovna ministerstva vnitra"),
     VOZP("Vojenská zdravotní pojišťovna"),
     CPZP("Česká průmyslová zdravotní pojišťovna"),
@@ -10,6 +10,7 @@ public enum Pojistovna {
     Pojistovna(String nazev) {
         this.nazev = nazev;
     }
+
     public String getNazev() {
         return nazev;
     }

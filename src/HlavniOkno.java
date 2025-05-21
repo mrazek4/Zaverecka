@@ -25,48 +25,61 @@ public class HlavniOkno extends JFrame {
         mainPanel = new JPanel(cardLayout);
         add(mainPanel, BorderLayout.CENTER);
 
-        // === Panel přihlášení ===
-        JPanel panelPrihlaseni = new JPanel(new FlowLayout(FlowLayout.CENTER,20,20));
-
+        // === Přihlašovací panel ===
+        JPanel panelPrihlaseni = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
 
         JButton btnPrihlasitPacient = new JButton("Přihlásit se jako pacient");
         JButton btnPrihlasitAdmin = new JButton("Přihlásit se jako admin");
         JButton btnRegistrovat = new JButton("Registrovat se");
+        JButton btnOAplikaci = new JButton("O aplikaci");
 
         panelPrihlaseni.add(btnPrihlasitPacient);
         panelPrihlaseni.add(Box.createVerticalStrut(10));
         panelPrihlaseni.add(btnPrihlasitAdmin);
         panelPrihlaseni.add(Box.createVerticalStrut(10));
         panelPrihlaseni.add(btnRegistrovat);
+        panelPrihlaseni.add(Box.createVerticalStrut(20));
+        panelPrihlaseni.add(btnOAplikaci);
 
-        // === Panel aplikace ===
-        JPanel panelAplikace = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
+        // === Panel pro pacienta ===
+        JPanel panelPacient = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
         JButton btnRezervovat = new JButton("Rezervovat termín");
         JButton btnZobrazit = new JButton("Zobrazit rezervace");
         JButton btnZmenaHesla = new JButton("Změnit heslo");
         JButton btnOdhlasit = new JButton("Odhlásit se");
 
-        panelAplikace.add(btnRezervovat);
-        panelAplikace.add(btnZobrazit);
-        panelAplikace.add(btnZmenaHesla);
-        panelAplikace.add(btnOdhlasit);
+        panelPacient.add(btnRezervovat);
+        panelPacient.add(btnZobrazit);
+        panelPacient.add(btnZmenaHesla);
+        panelPacient.add(btnOdhlasit);
 
-        // === Přidání panelů do CardLayout ===
+        // === Panel pro admina ===
+        JPanel panelAdmin = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
+        JButton btnZobrazitA = new JButton("Zobrazit rezervace");
+        JButton btnZmenaHeslaA = new JButton("Změnit heslo");
+        JButton btnStatistika = new JButton("Zobrazit statistiku");
+        JButton btnOdhlasitA = new JButton("Odhlásit se");
+
+        panelAdmin.add(btnZobrazitA);
+        panelAdmin.add(btnZmenaHeslaA);
+        panelAdmin.add(btnStatistika);
+        panelAdmin.add(btnOdhlasitA);
+
+        // === Přidání panelů ===
         mainPanel.add(panelPrihlaseni, "login");
-        mainPanel.add(panelAplikace, "app");
+        mainPanel.add(panelPacient, "pacient");
+        mainPanel.add(panelAdmin, "admin");
 
-        // === Akce tlačítek ===
-
-        // Přihlášení pacient
+        // === Přihlášení pacient ===
         btnPrihlasitPacient.addActionListener(e -> {
             new PrihlaseniFormular(uzivatele, uzivatel -> {
                 prihlasenyUzivatel = uzivatel;
                 jeAdminPrihlasen = false;
-                cardLayout.show(mainPanel, "app");
+                cardLayout.show(mainPanel, "pacient");
             }).setVisible(true);
         });
 
-        // Přihlášení admin
+        // === Přihlášení admin ===
         btnPrihlasitAdmin.addActionListener(e -> {
             JPanel loginPanel = new JPanel(new GridLayout(2, 2));
             JTextField jmenoField = new JTextField();
@@ -77,7 +90,6 @@ public class HlavniOkno extends JFrame {
             loginPanel.add(hesloField);
 
             int result = JOptionPane.showConfirmDialog(this, loginPanel, "Přihlášení admina", JOptionPane.OK_CANCEL_OPTION);
-
             if (result == JOptionPane.OK_OPTION) {
                 String jmeno = jmenoField.getText();
                 String heslo = new String(hesloField.getPassword());
@@ -86,7 +98,7 @@ public class HlavniOkno extends JFrame {
                     if (u.getJmeno().equals(jmeno) && u.getHeslo().equals(heslo) && u.isJeAdmin()) {
                         jeAdminPrihlasen = true;
                         prihlasenyUzivatel = null;
-                        cardLayout.show(mainPanel, "app");
+                        cardLayout.show(mainPanel, "admin");
                         JOptionPane.showMessageDialog(this, "Přihlášení jako admin bylo úspěšné.");
                         return;
                     }
@@ -95,99 +107,101 @@ public class HlavniOkno extends JFrame {
             }
         });
 
-        // Registrace
-        btnRegistrovat.addActionListener(e -> {
-            new RegistraceFormular(uzivatele).setVisible(true);
+        // === Registrace ===
+        btnRegistrovat.addActionListener(e -> new RegistraceFormular(uzivatele).setVisible(true));
+
+        // === O aplikaci ===
+        btnOAplikaci.addActionListener(e -> {
+            JOptionPane.showMessageDialog(this,
+                    "O aplikaci:\n" +
+                            "Rezervační systém pro ordinaci\n" +
+                            "Autor: Mrazek Jakub\n" +
+                            "Verze: 1.0\n" +
+                            "Datum: 2025\n\n" +
+                            "Funkce:\n" +
+                            "- Přihlášení a registrace\n" +
+                            "- Rezervace termínů\n" +
+                            "- Statistika a historie\n" +
+                            "- Ruseni terminu\n",
+                    "O aplikaci",
+                    JOptionPane.INFORMATION_MESSAGE);
         });
 
-        // Rezervace
-        btnRezervovat.addActionListener(e -> {
-            if (prihlasenyUzivatel != null) {
-                new RezervaceFormular(prihlasenyUzivatel).setVisible(true);
-            } else {
-                JOptionPane.showMessageDialog(this, "Rezervace je dostupná pouze pro přihlášeného pacienta.");
-            }
-        });
-
-        // Zobrazit rezervace
-        btnZobrazit.addActionListener(e -> {
-            if (jeAdminPrihlasen || prihlasenyUzivatel != null) {
-                new ZobrazitRezervace(prihlasenyUzivatel, jeAdminPrihlasen).setVisible(true);
-            } else {
-                JOptionPane.showMessageDialog(this, "Nejste přihlášen.", "Chyba", JOptionPane.ERROR_MESSAGE);
-            }
-        });
-
-        // Odhlášení
+        // === Akce pacienta ===
+        btnRezervovat.addActionListener(e -> new RezervaceFormular(prihlasenyUzivatel).setVisible(true));
+        btnZobrazit.addActionListener(e -> new ZobrazitRezervace(prihlasenyUzivatel, false).setVisible(true));
+        btnZmenaHesla.addActionListener(e -> zmenitHeslo(prihlasenyUzivatel));
         btnOdhlasit.addActionListener(e -> {
-            if (prihlasenyUzivatel == null && !jeAdminPrihlasen) {
-                JOptionPane.showMessageDialog(this, "Nejste přihlášen.", "Info", JOptionPane.INFORMATION_MESSAGE);
-                return;
-            }
-
             prihlasenyUzivatel = null;
-            jeAdminPrihlasen = false;
-
-            JOptionPane.showMessageDialog(this, "Byl jste úspěšně odhlášen.");
             cardLayout.show(mainPanel, "login");
+            JOptionPane.showMessageDialog(this, "Byl jste úspěšně odhlášen.");
         });
 
-        // === Změna hesla ===
-        btnZmenaHesla.addActionListener(e -> {
-            Uzivatel cil = (jeAdminPrihlasen) ? najdiAdmina() : prihlasenyUzivatel;
-            if (cil == null) {
-                JOptionPane.showMessageDialog(this, "Nejste přihlášen.", "Chyba", JOptionPane.ERROR_MESSAGE);
+        // === Akce admina ===
+        btnZobrazitA.addActionListener(e -> new ZobrazitRezervace(null, true).setVisible(true));
+        btnZmenaHeslaA.addActionListener(e -> zmenitHeslo(najdiAdmina()));
+        btnStatistika.addActionListener(e -> new StatistikaOkno().setVisible(true));
+        btnOdhlasitA.addActionListener(e -> {
+            jeAdminPrihlasen = false;
+            cardLayout.show(mainPanel, "login");
+            JOptionPane.showMessageDialog(this, "Admin byl odhlášen.");
+        });
+
+        // === Načti uživatele ===
+        nacistUzivatele("uzivatele.txt");
+    }
+
+    private void zmenitHeslo(Uzivatel uzivatel) {
+        if (uzivatel == null) {
+            JOptionPane.showMessageDialog(this, "Nejste přihlášen.", "Chyba", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        JPanel panel = new JPanel(new GridLayout(3, 2));
+        JPasswordField stareF = new JPasswordField();
+        JPasswordField noveF = new JPasswordField();
+        JPasswordField noveZnovuF = new JPasswordField();
+
+        panel.add(new JLabel("Staré heslo:"));
+        panel.add(stareF);
+        panel.add(new JLabel("Nové heslo:"));
+        panel.add(noveF);
+        panel.add(new JLabel("Znovu nové heslo:"));
+        panel.add(noveZnovuF);
+
+        int vysledek = JOptionPane.showConfirmDialog(this, panel, "Změna hesla", JOptionPane.OK_CANCEL_OPTION);
+        if (vysledek == JOptionPane.OK_OPTION) {
+            String stare = new String(stareF.getPassword()).trim();
+            String nove = new String(noveF.getPassword()).trim();
+            String noveZnovu = new String(noveZnovuF.getPassword()).trim();
+
+            if (!uzivatel.getHeslo().equals(stare)) {
+                JOptionPane.showMessageDialog(this, "Staré heslo není správné.", "Chyba", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            JPanel panel = new JPanel(new GridLayout(3, 2));
-            JPasswordField stareF = new JPasswordField();
-            JPasswordField noveF = new JPasswordField();
-            JPasswordField noveZnovuF = new JPasswordField();
-
-            panel.add(new JLabel("Staré heslo:"));
-            panel.add(stareF);
-            panel.add(new JLabel("Nové heslo:"));
-            panel.add(noveF);
-            panel.add(new JLabel("Znovu nové heslo:"));
-            panel.add(noveZnovuF);
-
-            int vysledek = JOptionPane.showConfirmDialog(this, panel, "Změna hesla", JOptionPane.OK_CANCEL_OPTION);
-            if (vysledek == JOptionPane.OK_OPTION) {
-                String stare = new String(stareF.getPassword()).trim();
-                String nove = new String(noveF.getPassword()).trim();
-                String noveZnovu = new String(noveZnovuF.getPassword()).trim();
-
-                if (!cil.getHeslo().equals(stare)) {
-                    JOptionPane.showMessageDialog(this, "Staré heslo není správné.", "Chyba", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                if (nove.equals(stare)) {
-                    JOptionPane.showMessageDialog(this, "Nové heslo nesmí být stejné jako staré.", "Chyba", JOptionPane.WARNING_MESSAGE);
-                    return;
-                }
-
-                if (!nove.equals(noveZnovu)) {
-                    JOptionPane.showMessageDialog(this, "Nová hesla se neshodují.", "Chyba", JOptionPane.WARNING_MESSAGE);
-                    return;
-                }
-
-                cil.setHeslo(nove);
-                ulozitUzivatele("uzivatele.txt");
-                JOptionPane.showMessageDialog(this, "Heslo bylo úspěšně změněno.");
+            if (nove.equals(stare)) {
+                JOptionPane.showMessageDialog(this, "Nové heslo nesmí být stejné jako staré.", "Chyba", JOptionPane.WARNING_MESSAGE);
+                return;
             }
-        });
+
+            if (!nove.equals(noveZnovu)) {
+                JOptionPane.showMessageDialog(this, "Nová hesla se neshodují.", "Chyba", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            uzivatel.setHeslo(nove);
+            ulozitUzivatele("uzivatele.txt");
+            JOptionPane.showMessageDialog(this, "Heslo bylo úspěšně změněno.");
+        }
     }
 
     private Uzivatel najdiAdmina() {
         return uzivatele.stream().filter(Uzivatel::isJeAdmin).findFirst().orElse(null);
     }
 
-    // === Soubory ===
-
-    public void ulozitUzivatele(String nazevSouboru) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(nazevSouboru))) {
+    public void ulozitUzivatele(String soubor) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(soubor))) {
             for (Uzivatel u : uzivatele) {
                 writer.write(u.toFileString());
                 writer.newLine();
@@ -197,24 +211,22 @@ public class HlavniOkno extends JFrame {
         }
     }
 
-    public void nacistUzivatele(String nazevSouboru) {
-        File soubor = new File(nazevSouboru);
-        if (!soubor.exists()) return;
+    public void nacistUzivatele(String soubor) {
+        File f = new File(soubor);
+        if (!f.exists()) return;
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(nazevSouboru))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(f))) {
             String radek;
             while ((radek = reader.readLine()) != null) {
                 Uzivatel u = Uzivatel.fromFileString(radek);
-                if (u != null) {
-                    uzivatele.add(u);
-                }
+                if (u != null) uzivatele.add(u);
             }
         } catch (IOException e) {
             System.err.println("Chyba při načítání uživatelů: " + e.getMessage());
         }
 
-        boolean adminExistuje = uzivatele.stream().anyMatch(Uzivatel::isJeAdmin);
-        if (!adminExistuje) {
+        boolean existujeAdmin = uzivatele.stream().anyMatch(Uzivatel::isJeAdmin);
+        if (!existujeAdmin) {
             uzivatele.add(new Uzivatel("admin", "Admin", "admin@ordinace.cz", "123456789", "heslo123", true, Pojistovna.VZP));
         }
     }

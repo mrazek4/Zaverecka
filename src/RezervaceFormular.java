@@ -3,6 +3,7 @@ import java.awt.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Properties;
+
 import org.jdatepicker.impl.*;
 
 public class RezervaceFormular extends JFrame {
@@ -39,7 +40,7 @@ public class RezervaceFormular extends JFrame {
         JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
 
         // === Čas ===
-        String[] casy = { "08:00", "09:00", "10:00", "11:00", "13:00", "14:00", "15:00" };
+        String[] casy = {"08:00", "09:00", "10:00", "11:00", "13:00", "14:00", "15:00"};
         JComboBox<String> casBox = new JComboBox<>(casy);
 
         // === Upozornění při výběru plného dne ===
@@ -102,25 +103,45 @@ public class RezervaceFormular extends JFrame {
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        gbc.gridx = 0; gbc.gridy = 0; panel.add(new JLabel("Jméno:"), gbc);
-        gbc.gridx = 1; panel.add(jmenoF, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        panel.add(new JLabel("Jméno:"), gbc);
+        gbc.gridx = 1;
+        panel.add(jmenoF, gbc);
 
-        gbc.gridx = 0; gbc.gridy++; panel.add(new JLabel("E-mail:"), gbc);
-        gbc.gridx = 1; panel.add(emailF, gbc);
+        gbc.gridx = 0;
+        gbc.gridy++;
+        panel.add(new JLabel("E-mail:"), gbc);
+        gbc.gridx = 1;
+        panel.add(emailF, gbc);
 
-        gbc.gridx = 0; gbc.gridy++; panel.add(new JLabel("Telefon:"), gbc);
-        gbc.gridx = 1; panel.add(telefonF, gbc);
+        gbc.gridx = 0;
+        gbc.gridy++;
+        panel.add(new JLabel("Telefon:"), gbc);
+        gbc.gridx = 1;
+        panel.add(telefonF, gbc);
 
-        gbc.gridx = 0; gbc.gridy++; panel.add(new JLabel("Typ návštěvy:"), gbc);
-        gbc.gridx = 1; panel.add(typNavstevyBox, gbc);
+        gbc.gridx = 0;
+        gbc.gridy++;
+        panel.add(new JLabel("Typ návštěvy:"), gbc);
+        gbc.gridx = 1;
+        panel.add(typNavstevyBox, gbc);
 
-        gbc.gridx = 0; gbc.gridy++; panel.add(new JLabel("Datum:"), gbc);
-        gbc.gridx = 1; panel.add(datePicker, gbc);
+        gbc.gridx = 0;
+        gbc.gridy++;
+        panel.add(new JLabel("Datum:"), gbc);
+        gbc.gridx = 1;
+        panel.add(datePicker, gbc);
 
-        gbc.gridx = 0; gbc.gridy++; panel.add(new JLabel("Čas:"), gbc);
-        gbc.gridx = 1; panel.add(casBox, gbc);
+        gbc.gridx = 0;
+        gbc.gridy++;
+        panel.add(new JLabel("Čas:"), gbc);
+        gbc.gridx = 1;
+        panel.add(casBox, gbc);
 
-        gbc.gridx = 0; gbc.gridy++; gbc.gridwidth = 2;
+        gbc.gridx = 0;
+        gbc.gridy++;
+        gbc.gridwidth = 2;
         panel.add(rezervovat, gbc);
 
         add(panel);

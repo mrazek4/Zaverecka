@@ -49,6 +49,9 @@ public class RegistraceFormular extends JFrame {
                     JOptionPane.showMessageDialog(this, "Uživatel s tímto e-mailem už existuje!", "Chyba", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
+                if (u.getTelefon().equalsIgnoreCase(telefon)) {
+                    JOptionPane.showMessageDialog(this, "Uživatel s tímto cislem už existuje", "Chyba", JOptionPane.ERROR_MESSAGE);
+                }
             }
 
             Uzivatel novy = new Uzivatel(
@@ -73,25 +76,45 @@ public class RegistraceFormular extends JFrame {
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        gbc.gridx = 0; gbc.gridy = 0; panel.add(new JLabel("Jméno:"), gbc);
-        gbc.gridx = 1; panel.add(jmenoF, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        panel.add(new JLabel("Jméno:"), gbc);
+        gbc.gridx = 1;
+        panel.add(jmenoF, gbc);
 
-        gbc.gridx = 0; gbc.gridy++; panel.add(new JLabel("Příjmení:"), gbc);
-        gbc.gridx = 1; panel.add(prijmeniF, gbc);
+        gbc.gridx = 0;
+        gbc.gridy++;
+        panel.add(new JLabel("Příjmení:"), gbc);
+        gbc.gridx = 1;
+        panel.add(prijmeniF, gbc);
 
-        gbc.gridx = 0; gbc.gridy++; panel.add(new JLabel("E-mail:"), gbc);
-        gbc.gridx = 1; panel.add(emailF, gbc);
+        gbc.gridx = 0;
+        gbc.gridy++;
+        panel.add(new JLabel("E-mail:"), gbc);
+        gbc.gridx = 1;
+        panel.add(emailF, gbc);
 
-        gbc.gridx = 0; gbc.gridy++; panel.add(new JLabel("Telefon:"), gbc);
-        gbc.gridx = 1; panel.add(telefonF, gbc);
+        gbc.gridx = 0;
+        gbc.gridy++;
+        panel.add(new JLabel("Telefon:"), gbc);
+        gbc.gridx = 1;
+        panel.add(telefonF, gbc);
 
-        gbc.gridx = 0; gbc.gridy++; panel.add(new JLabel("Heslo:"), gbc);
-        gbc.gridx = 1; panel.add(hesloF, gbc);
+        gbc.gridx = 0;
+        gbc.gridy++;
+        panel.add(new JLabel("Heslo:"), gbc);
+        gbc.gridx = 1;
+        panel.add(hesloF, gbc);
 
-        gbc.gridx = 0; gbc.gridy++; panel.add(new JLabel("Pojišťovna:"), gbc);
-        gbc.gridx = 1; panel.add(pojistovnaBox, gbc);
+        gbc.gridx = 0;
+        gbc.gridy++;
+        panel.add(new JLabel("Pojišťovna:"), gbc);
+        gbc.gridx = 1;
+        panel.add(pojistovnaBox, gbc);
 
-        gbc.gridx = 0; gbc.gridy++; gbc.gridwidth = 2;
+        gbc.gridx = 0;
+        gbc.gridy++;
+        gbc.gridwidth = 2;
         panel.add(registrovatBtn, gbc);
 
         add(panel);

@@ -39,7 +39,6 @@ public class RezervaceSpravce {
     public static void ulozitDoSouboru(String cesta) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(cesta))) {
             for (Rezervace r : seznamRezervaci) {
-                if (!r.getTermin().equals("N/A")) {}
                 bw.write(r.toFileString());
                 bw.newLine();
             }

@@ -4,12 +4,12 @@ public enum TypNavstevy {
     KONTROLA("Běžná kontrola");
 
 
-
     private final String popis;
 
     TypNavstevy(String popis) {
         this.popis = popis;
     }
+
     public String getPopis() {
         return popis;
     }

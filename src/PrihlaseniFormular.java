@@ -48,13 +48,21 @@ public class PrihlaseniFormular extends JFrame {
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        gbc.gridx = 0; gbc.gridy = 0; panel.add(new JLabel("E-mail:"), gbc);
-        gbc.gridx = 1; panel.add(emailF, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        panel.add(new JLabel("E-mail:"), gbc);
+        gbc.gridx = 1;
+        panel.add(emailF, gbc);
 
-        gbc.gridx = 0; gbc.gridy++; panel.add(new JLabel("Heslo:"), gbc);
-        gbc.gridx = 1; panel.add(hesloF, gbc);
+        gbc.gridx = 0;
+        gbc.gridy++;
+        panel.add(new JLabel("Heslo:"), gbc);
+        gbc.gridx = 1;
+        panel.add(hesloF, gbc);
 
-        gbc.gridx = 0; gbc.gridy++; gbc.gridwidth = 2;
+        gbc.gridx = 0;
+        gbc.gridy++;
+        gbc.gridwidth = 2;
         panel.add(prihlasitBtn, gbc);
 
         add(panel);
