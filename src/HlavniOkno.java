@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class HlavniOkno extends JFrame {
     private boolean jeAdminPrihlasen = false;
@@ -202,14 +203,18 @@ public class HlavniOkno extends JFrame {
 
     public void ulozitUzivatele(String soubor) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(soubor))) {
+            HashSet<String> emaily = new HashSet<>();
             for (Uzivatel u : uzivatele) {
-                writer.write(u.toFileString());
-                writer.newLine();
+                if (emaily.add(u.getEmail().toLowerCase())) {
+                    writer.write(u.toFileString());
+                    writer.newLine();
+                }
             }
         } catch (IOException e) {
             System.err.println("Chyba při ukládání uživatelů: " + e.getMessage());
         }
     }
+
 
     public void nacistUzivatele(String soubor) {
         File f = new File(soubor);

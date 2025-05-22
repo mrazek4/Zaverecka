@@ -1,4 +1,0 @@
-Jakub;Mrazek;mrazekjakub111@gmail.com;770113993;2025-05-22 08:00;PREVENTIVNI;true
-Jakub;Mrazek;mrazekjakub111@gmail.com;770113993;2025-05-22 08:00;PREVENTIVNI;true
-Jakub;Mrazek;mrazekjakub111@gmail.com;770113993;2025-05-22 09:00;PREVENTIVNI;false
-Jakub;Mrazek;mrazekjakub111@gmail.com;770113993;2025-05-24 08:00;PREVENTIVNI;false

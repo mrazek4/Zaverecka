@@ -2,11 +2,21 @@ import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import org.jdatepicker.impl.*;
 
 public class RezervaceFormular extends JFrame {
+
+    private static final String[] VSECHNY_CASY = {
+            "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00"
+    };
+
+    private JComboBox<String> casBox;
+    private JDatePickerImpl datePicker;
+    private JComboBox<TypNavstevy> typNavstevyBox;
 
     public RezervaceFormular(Uzivatel prihlasenyUzivatel) {
         if (prihlasenyUzivatel == null) {
@@ -23,12 +33,11 @@ public class RezervaceFormular extends JFrame {
         JTextField jmenoF = new JTextField(prihlasenyUzivatel.getJmeno(), 20);
         JTextField emailF = new JTextField(prihlasenyUzivatel.getEmail(), 20);
         JTextField telefonF = new JTextField(prihlasenyUzivatel.getTelefon(), 20);
-
         jmenoF.setEditable(false);
         emailF.setEditable(false);
         telefonF.setEditable(false);
 
-        JComboBox<TypNavstevy> typNavstevyBox = new JComboBox<>(TypNavstevy.values());
+        typNavstevyBox = new JComboBox<>(TypNavstevy.values());
 
         // === Datum ===
         UtilDateModel model = new UtilDateModel();
@@ -37,22 +46,23 @@ public class RezervaceFormular extends JFrame {
         p.put("text.month", "Měsíc");
         p.put("text.year", "Rok");
         JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
-        JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
+        datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
 
         // === Čas ===
-        String[] casy = {"08:00", "09:00", "10:00", "11:00", "13:00", "14:00", "15:00"};
-        JComboBox<String> casBox = new JComboBox<>(casy);
+        casBox = new JComboBox<>();
+        aktualizujCasyProDatum(null); // prázdné na začátku
 
-        // === Upozornění při výběru plného dne ===
+        // === Reakce na výběr data ===
         datePicker.addActionListener(e -> {
             Object vybraneDatum = datePicker.getModel().getValue();
             if (vybraneDatum != null) {
                 java.util.Date selectedDate = (java.util.Date) vybraneDatum;
                 LocalDate datum = new java.sql.Date(selectedDate.getTime()).toLocalDate();
                 String datumText = datum.format(DateTimeFormatter.ISO_DATE);
+                aktualizujCasyProDatum(datumText);
 
                 if (RezervaceSpravce.jeDenPlneObsazen(datumText)) {
-                    JOptionPane.showMessageDialog(this, "Tento den je plně obsazen a není možné vytvořit novou rezervaci.", "Upozornění", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Tento den je plně obsazen.", "Upozornění", JOptionPane.WARNING_MESSAGE);
                 }
             }
         });
@@ -145,6 +155,27 @@ public class RezervaceFormular extends JFrame {
         panel.add(rezervovat, gbc);
 
         add(panel);
+    }
+
+    private void aktualizujCasyProDatum(String datum) {
+        List<String> volneCasy = new ArrayList<>();
+        if (datum == null) {
+            casBox.setModel(new DefaultComboBoxModel<>(new String[0]));
+            return;
+        }
+
+        for (String cas : VSECHNY_CASY) {
+            String termin = datum + " " + cas;
+            if (!RezervaceSpravce.existujeRezervaceNaTermin(termin)) {
+                volneCasy.add(cas);
+            }
+        }
+
+        if (volneCasy.isEmpty()) {
+            volneCasy.add("Žádné volné časy");
+        }
+
+        casBox.setModel(new DefaultComboBoxModel<>(volneCasy.toArray(new String[0])));
     }
 
     // === Formátovač pro JDatePicker ===

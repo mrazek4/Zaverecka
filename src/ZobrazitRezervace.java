@@ -8,6 +8,7 @@ public class ZobrazitRezervace extends JFrame {
     private JList<Rezervace> seznam;
     private JComboBox<TypNavstevy> filtrTyp;
     private JTextField hledatField;
+    private JCheckBox zobrazitZruseneCheck;
 
     private Uzivatel prihlasenyUzivatel;
     private boolean jeAdmin;
@@ -30,11 +31,13 @@ public class ZobrazitRezervace extends JFrame {
         filtrTyp.setSelectedIndex(0);
 
         hledatField = new JTextField(15);
+        zobrazitZruseneCheck = new JCheckBox("Zobrazit zrušené");
 
         filtrPanel.add(new JLabel("Typ návštěvy:"));
         filtrPanel.add(filtrTyp);
         filtrPanel.add(new JLabel("Hledat:"));
         filtrPanel.add(hledatField);
+        filtrPanel.add(zobrazitZruseneCheck);
 
         add(filtrPanel, BorderLayout.NORTH);
 
@@ -42,33 +45,43 @@ public class ZobrazitRezervace extends JFrame {
         model = new DefaultListModel<>();
         seznam = new JList<>(model);
         seznam.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
         JScrollPane scrollPane = new JScrollPane(seznam);
         add(scrollPane, BorderLayout.CENTER);
 
-        // === Tlačítko pro smazání (admin) ===
-        if (jeAdmin) {
-            JButton btnSmazat = new JButton("Zrušit vybranou rezervaci");
-            btnSmazat.addActionListener(e -> {
-                Rezervace vybrana = seznam.getSelectedValue();
-                if (vybrana != null) {
-                    int potvrzeni = JOptionPane.showConfirmDialog(this,
-                            "Opravdu chcete zrušit tuto rezervaci?",
-                            "Potvrdit zrušení",
-                            JOptionPane.YES_NO_OPTION);
+        // === Tlačítka ===
+        JPanel tlacitkaPanel = new JPanel();
 
-                    if (potvrzeni == JOptionPane.YES_OPTION) {
-                        RezervaceSpravce.odstranitRezervaci(vybrana);
-                        RezervaceSpravce.ulozitDoSouboru("rezervace.txt");
-                        aktualizujSeznam();
-                        JOptionPane.showMessageDialog(this, "Rezervace byla zrušena.");
-                    }
+        if (!jeAdmin && prihlasenyUzivatel != null) {
+            JButton btnZmenitTermin = new JButton("Změnit termín");
+            btnZmenitTermin.addActionListener(e -> {
+                Rezervace vybrana = seznam.getSelectedValue();
+                if (vybrana != null && !vybrana.isZrusena()) {
+                    new FormularZmenaTerminu(vybrana).setVisible(true);
                 } else {
-                    JOptionPane.showMessageDialog(this, "Vyberte prosím rezervaci ke zrušení.");
+                    JOptionPane.showMessageDialog(this, "Vyberte platnou rezervaci.");
                 }
             });
-            add(btnSmazat, BorderLayout.SOUTH);
+            tlacitkaPanel.add(btnZmenitTermin);
         }
+
+        if (jeAdmin) {
+            JButton btnZrusit = new JButton("Zrušit rezervaci");
+            btnZrusit.addActionListener(e -> {
+                Rezervace vybrana = seznam.getSelectedValue();
+                if (vybrana != null && !vybrana.isZrusena()) {
+                    vybrana.setZrusena(true);
+                    RezervaceSpravce.ulozitDoSouboru("rezervace.txt");
+                    JOptionPane.showMessageDialog(this, "Rezervace byla zrušena.");
+                    aktualizujSeznam();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Vyberte platnou rezervaci.");
+                }
+            });
+            tlacitkaPanel.add(btnZrusit);
+        }
+
+        // ✅ Přidání panelu vždy
+        add(tlacitkaPanel, BorderLayout.SOUTH);
 
         // === Posluchače filtrů ===
         filtrTyp.addActionListener(e -> aktualizujSeznam());
@@ -79,6 +92,8 @@ public class ZobrazitRezervace extends JFrame {
             public void insertUpdate(javax.swing.event.DocumentEvent e) { aktualizujSeznam(); }
         });
 
+        zobrazitZruseneCheck.addActionListener(e -> aktualizujSeznam());
+
         // === První načtení seznamu ===
         aktualizujSeznam();
     }
@@ -87,17 +102,20 @@ public class ZobrazitRezervace extends JFrame {
         model.clear();
         TypNavstevy vybranyTyp = (TypNavstevy) filtrTyp.getSelectedItem();
         String hledat = hledatField.getText().toLowerCase();
+        boolean zobrazitZrusene = zobrazitZruseneCheck.isSelected();
 
         ArrayList<Rezervace> vsechny = RezervaceSpravce.getSeznamRezervaci();
         vsechny.sort((r1, r2) -> r1.getTermin().compareTo(r2.getTermin()));
 
         for (Rezervace r : vsechny) {
-            boolean jeViditelna =
-                    (jeAdmin || (prihlasenyUzivatel != null && r.getEmail().equalsIgnoreCase(prihlasenyUzivatel.getEmail()))) &&
-                            (vybranyTyp == null || r.getTypNavstevy() == vybranyTyp) &&
-                            (r.getJmeno().toLowerCase().contains(hledat) || r.getEmail().toLowerCase().contains(hledat));
+            boolean jeMoje = jeAdmin || (prihlasenyUzivatel != null &&
+                    r.getEmail().equalsIgnoreCase(prihlasenyUzivatel.getEmail()));
+            boolean odpovidaTypu = (vybranyTyp == null || r.getTypNavstevy() == vybranyTyp);
+            boolean odpovidaHledani = r.getJmeno().toLowerCase().contains(hledat)
+                    || r.getEmail().toLowerCase().contains(hledat);
+            boolean odpovidaZruseni = zobrazitZrusene || !r.isZrusena();
 
-            if (jeViditelna) {
+            if (jeMoje && odpovidaTypu && odpovidaHledani && odpovidaZruseni) {
                 model.addElement(r);
             }
         }

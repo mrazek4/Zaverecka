@@ -64,7 +64,7 @@ public class Rezervace {
     public static Rezervace fromFileString(String radek) {
         String[] casti = radek.split(";");
         try {
-            if (casti.length == 7) {
+            if (casti.length == 8) {
                 String jmeno = casti[0];
                 String prijmeni = casti[1];
                 String email = casti[2];
