@@ -1,18 +1,35 @@
 import java.io.*;
 import java.util.ArrayList;
 
+/**
+ * Trida pro spravu rezervaci - pridavani, mazani, ukladani a nacitani ze souboru.
+ */
 public class RezervaceSpravce {
 
     private static ArrayList<Rezervace> seznamRezervaci = new ArrayList<>();
 
+    /**
+     * Prida rezervaci do seznamu.
+     *
+     * @param rezervace rezervace k pridani
+     */
     public static void pridatRezervaci(Rezervace rezervace) {
         seznamRezervaci.add(rezervace);
     }
 
+    /**
+     * Odstrani rezervaci ze seznamu.
+     *
+     * @param rezervace rezervace k odstraneni
+     */
     public static void odstranitRezervaci(Rezervace rezervace) {
         seznamRezervaci.remove(rezervace);
     }
-
+    /**
+     * Overi, zda uz existuje rezervace na dany termin.
+     * @param termin datum a cas
+     * @return true pokud rezervace existuje
+     */
     public static boolean existujeRezervaceNaTermin(String termin) {
         for (Rezervace r : seznamRezervaci) {
             if (r.getTermin().equals(termin)) {
@@ -21,7 +38,11 @@ public class RezervaceSpravce {
         }
         return false;
     }
-
+    /**
+     * Zjisti, zda je dany den plne obsazen.
+     * @param datum datum ve formatu YYYY-MM-DD
+     * @return true pokud je dosazeno maximalniho poctu rezervaci
+     */
     public static boolean jeDenPlneObsazen(String datum) {
         int pocet = 0;
         for (Rezervace r : seznamRezervaci) {
@@ -35,7 +56,10 @@ public class RezervaceSpravce {
     public static ArrayList<Rezervace> getSeznamRezervaci() {
         return seznamRezervaci;
     }
-
+    /**
+     * Ulozi seznam rezervaci do souboru.
+     * @param cesta cesta k souboru
+     */
     public static void ulozitDoSouboru(String cesta) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(cesta))) {
             for (Rezervace r : seznamRezervaci) {
@@ -46,7 +70,10 @@ public class RezervaceSpravce {
             System.err.println("Chyba při ukládání rezervací: " + e.getMessage());
         }
     }
-
+    /**
+     * Nacte seznam rezervaci ze souboru.
+     * @param cesta cesta k souboru
+     */
     public static void nacistZeSouboru(String cesta) {
         seznamRezervaci.clear();
 

@@ -2,11 +2,21 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * Formular pro prihlaseni pacienta do systemu.
+ */
 public class PrihlaseniFormular extends JFrame {
+    /**
+     * Rozhrani pro oznameni o uspesnem prihlaseni uzivatele.
+     */
     public interface PrihlaseniListener {
         void onUzivatelPrihlasen(Uzivatel uzivatel);
     }
-
+    /**
+     * Vytvori formular pro prihlaseni pacienta.
+     * @param uzivatele seznam dostupnych uzivatelu
+     * @param listener posluchac pro reakci na prihlaseni
+     */
     public PrihlaseniFormular(ArrayList<Uzivatel> uzivatele, PrihlaseniListener listener) {
         setTitle("Přihlášení pacienta");
         setSize(350, 200);

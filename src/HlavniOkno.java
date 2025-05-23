@@ -3,7 +3,9 @@ import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashSet;
-
+/**
+ * Hlavni okno aplikace, ktere slouzi jako vychozi bod pro prihlaseni, registraci a navigaci.
+ */
 public class HlavniOkno extends JFrame {
     private boolean jeAdminPrihlasen = false;
     private Uzivatel prihlasenyUzivatel = null;
@@ -11,7 +13,9 @@ public class HlavniOkno extends JFrame {
 
     private JPanel mainPanel;
     private CardLayout cardLayout;
-
+    /**
+     * Vytvori nove hlavni okno aplikace a inicializuje vsechny komponenty a posluchace.
+     */
     public HlavniOkno() {
         setTitle("Rezervace do ordinace");
         setSize(700, 500);
@@ -151,7 +155,10 @@ public class HlavniOkno extends JFrame {
         // === Načti uživatele ===
         nacistUzivatele("uzivatele.txt");
     }
-
+    /**
+     * Zmeni heslo pro daneho uzivatele.
+     * @param uzivatel uzivatel, ktery chce zmenit heslo
+     */
     private void zmenitHeslo(Uzivatel uzivatel) {
         if (uzivatel == null) {
             JOptionPane.showMessageDialog(this, "Nejste přihlášen.", "Chyba", JOptionPane.ERROR_MESSAGE);
@@ -196,11 +203,17 @@ public class HlavniOkno extends JFrame {
             JOptionPane.showMessageDialog(this, "Heslo bylo úspěšně změněno.");
         }
     }
-
+    /**
+     * Vrati prvniho uzivatele, ktery ma roli administratora.
+     * @return admin uzivatel nebo null pokud neni nalezen
+     */
     private Uzivatel najdiAdmina() {
         return uzivatele.stream().filter(Uzivatel::isJeAdmin).findFirst().orElse(null);
     }
-
+    /**
+     * Ulozi seznam uzivatelu do souboru.
+     * @param soubor cesta k souboru
+     */
     public void ulozitUzivatele(String soubor) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(soubor))) {
             HashSet<String> emaily = new HashSet<>();
@@ -215,7 +228,10 @@ public class HlavniOkno extends JFrame {
         }
     }
 
-
+    /**
+     * Nacte seznam uzivatelu ze souboru a doplni defaultniho admina pokud chybi.
+     * @param soubor cesta k souboru
+     */
     public void nacistUzivatele(String soubor) {
         File f = new File(soubor);
         if (!f.exists()) return;

@@ -6,13 +6,18 @@ import java.util.*;
 import java.util.List;
 
 import org.jdatepicker.impl.*;
-
+/**
+ * Formular pro zmenu terminu stavajici rezervace.
+ */
 public class FormularZmenaTerminu extends JFrame {
 
     private JComboBox<String> casBox;
     private JDatePickerImpl datePicker;
     private Rezervace rezervace;
-
+    /**
+     * Vytvori formular pro zmenu terminu rezervace.
+     * @param rezervace rezervace, ktera se ma upravit
+     */
     public FormularZmenaTerminu(Rezervace rezervace) {
         this.rezervace = rezervace;
 

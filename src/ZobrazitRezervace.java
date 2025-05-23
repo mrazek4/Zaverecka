@@ -1,7 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-
+/**
+ * Okno pro zobrazeni seznamu rezervaci s moznosti filtrovani, hledani a ruseni.
+ */
 public class ZobrazitRezervace extends JFrame {
 
     private DefaultListModel<Rezervace> model;
@@ -12,7 +14,11 @@ public class ZobrazitRezervace extends JFrame {
 
     private Uzivatel prihlasenyUzivatel;
     private boolean jeAdmin;
-
+    /**
+     * Vytvori okno pro zobrazeni rezervaci pro uzivatele nebo admina.
+     * @param prihlasenyUzivatel aktualne prihlaseny uzivatel (null pokud je admin)
+     * @param jeAdmin true pokud je prihlaseny uzivatel administrator
+     */
     public ZobrazitRezervace(Uzivatel prihlasenyUzivatel, boolean jeAdmin) {
         this.prihlasenyUzivatel = prihlasenyUzivatel;
         this.jeAdmin = jeAdmin;
@@ -80,7 +86,7 @@ public class ZobrazitRezervace extends JFrame {
             tlacitkaPanel.add(btnZrusit);
         }
 
-        // ✅ Přidání panelu vždy
+        //  Přidání panelu vždy
         add(tlacitkaPanel, BorderLayout.SOUTH);
 
         // === Posluchače filtrů ===

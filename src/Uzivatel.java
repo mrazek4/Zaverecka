@@ -1,3 +1,6 @@
+/**
+ * Trida reprezentujici uzivatele systemu - pacient nebo admin
+ */
 public class Uzivatel {
     private String jmeno;
     private String prijmeni;
@@ -55,7 +58,11 @@ public class Uzivatel {
         return jmeno + ";" + prijmeni + ";" + email + ";" + telefon + ";" + heslo + ";" + jeAdmin + ";" + pojistovna.name();
     }
 
-    // Načtení ze souboru
+    /**
+     * Vytvori uzivatele ze zaznamu v textovem souboru.
+     * @param radek radek ze souboru
+     * @return instance uzivatele nebo null pri chybě
+     */
     public static Uzivatel fromFileString(String radek) {
         String[] casti = radek.split(";");
         if (casti.length != 7) return null;

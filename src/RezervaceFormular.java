@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Properties;
 
 import org.jdatepicker.impl.*;
-
+/**
+ * Formular pro vytvoreni nove rezervace.
+ */
 public class RezervaceFormular extends JFrame {
 
     private static final String[] VSECHNY_CASY = {
@@ -17,7 +19,10 @@ public class RezervaceFormular extends JFrame {
     private JComboBox<String> casBox;
     private JDatePickerImpl datePicker;
     private JComboBox<TypNavstevy> typNavstevyBox;
-
+    /**
+     * Vytvori formular pro rezervaci terminu pro prihlaseneho uzivatele.
+     * @param prihlasenyUzivatel aktualne prihlaseny uzivatel
+     */
     public RezervaceFormular(Uzivatel prihlasenyUzivatel) {
         if (prihlasenyUzivatel == null) {
             JOptionPane.showMessageDialog(this, "Pro vytvoření rezervace se musíte přihlásit!", "Nepřihlášen", JOptionPane.ERROR_MESSAGE);

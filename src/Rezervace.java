@@ -60,7 +60,12 @@ public class Rezervace {
         return jmeno + ";" + prijmeni + ";" + email + ";" + telefonC + ";" + termin + ";" + typNavstevy.name() + ";" + zrusena;
     }
 
-    // === Načtení ze souboru ===
+    /**
+     * Vytvori rezervaci z radku v souboru.
+     *
+     * @param radek radek textu
+     * @return objekt rezervace nebo null pri chybe
+     */
     public static Rezervace fromFileString(String radek) {
         String[] casti = radek.split(";");
         try {

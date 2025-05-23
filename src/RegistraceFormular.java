@@ -2,8 +2,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * Formular pro registraci noveho pacienta do systemu.
+ */
 public class RegistraceFormular extends JFrame {
-
+    /**
+     * Vytvori formular pro registraci pacienta.
+     *
+     * @param uzivatele seznam uzivatelu, do ktereho se pridava novy
+     */
     public RegistraceFormular(ArrayList<Uzivatel> uzivatele) {
         setTitle("Registrace nového pacienta");
         setSize(400, 400);

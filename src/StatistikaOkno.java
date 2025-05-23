@@ -2,9 +2,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.EnumMap;
-
+/**
+ * Okno pro zobrazeni statistik o rezervacich.
+ */
 public class StatistikaOkno extends JFrame {
-
+    /**
+     * Vytvori okno se statistikou rezervaci.
+     */
     public StatistikaOkno() {
         setTitle("Statistika rezervací");
         setSize(400, 300);

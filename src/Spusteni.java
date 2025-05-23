@@ -1,7 +1,11 @@
 import javax.swing.*;
-
+/**
+ * Trida zodpovedna za inicializaci a spusteni GUI aplikace.
+ */
 public class Spusteni {
-
+    /**
+     * Spousti hlavni okno aplikace a zajistuje nacteni dat.
+     */
     public void spusteni() {
 
         SwingUtilities.invokeLater(() -> {

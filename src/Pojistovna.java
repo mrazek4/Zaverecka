@@ -1,3 +1,6 @@
+/**
+ * Trida Pojistovna, reprezentuje typy pojistoven
+ */
 public enum Pojistovna {
     VZP("Všeobecná zdravotní pojišťovna"),
     ZPMV("Zdravotní pojišťovna ministerstva vnitra"),

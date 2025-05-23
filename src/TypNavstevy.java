@@ -1,3 +1,7 @@
+/**
+ * Třída, která repreyentuje typ kontroly pacienta.
+ */
+
 public enum TypNavstevy {
     PREVENTIVNI("Preventívní prohlídka"),
     AKUTNI("Akutní problém"),
