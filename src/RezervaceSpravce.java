@@ -32,7 +32,7 @@ public class RezervaceSpravce {
      */
     public static boolean existujeRezervaceNaTermin(String termin) {
         for (Rezervace r : seznamRezervaci) {
-            if (r.getTermin().equals(termin)) {
+            if (r.getTermin().equals(termin) && !r.isZrusena()) {
                 return true;
             }
         }

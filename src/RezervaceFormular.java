@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.jdatepicker.impl.*;
+
 /**
  * Formular pro vytvoreni nove rezervace.
  */
@@ -19,8 +20,10 @@ public class RezervaceFormular extends JFrame {
     private JComboBox<String> casBox;
     private JDatePickerImpl datePicker;
     private JComboBox<TypNavstevy> typNavstevyBox;
+
     /**
      * Vytvori formular pro rezervaci terminu pro prihlaseneho uzivatele.
+     *
      * @param prihlasenyUzivatel aktualne prihlaseny uzivatel
      */
     public RezervaceFormular(Uzivatel prihlasenyUzivatel) {
@@ -36,9 +39,12 @@ public class RezervaceFormular extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         JTextField jmenoF = new JTextField(prihlasenyUzivatel.getJmeno(), 20);
+        JTextField prijmeniF = new JTextField(prihlasenyUzivatel.getPrijmeni(), 20);
         JTextField emailF = new JTextField(prihlasenyUzivatel.getEmail(), 20);
         JTextField telefonF = new JTextField(prihlasenyUzivatel.getTelefon(), 20);
+
         jmenoF.setEditable(false);
+        prijmeniF.setEditable(false);
         emailF.setEditable(false);
         telefonF.setEditable(false);
 
@@ -123,6 +129,12 @@ public class RezervaceFormular extends JFrame {
         panel.add(new JLabel("Jméno:"), gbc);
         gbc.gridx = 1;
         panel.add(jmenoF, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy ++;
+        panel.add(new JLabel("Příjmení:"), gbc);
+        gbc.gridx = 1;
+        panel.add(prijmeniF, gbc);
 
         gbc.gridx = 0;
         gbc.gridy++;

@@ -1,3 +1,7 @@
+/**
+ * Trida reprezentujici rezervaci pacienta v systemu.
+ * Uchovava informace o pacientovi, terminu navstevy, typu navstevy a stavu zruseni.
+ */
 public class Rezervace {
     private String jmeno;
     private String prijmeni;
@@ -69,7 +73,7 @@ public class Rezervace {
     public static Rezervace fromFileString(String radek) {
         String[] casti = radek.split(";");
         try {
-            if (casti.length == 8) {
+            if (casti.length == 7) {
                 String jmeno = casti[0];
                 String prijmeni = casti[1];
                 String email = casti[2];

@@ -40,6 +40,15 @@ public class RegistraceFormular extends JFrame {
                 JOptionPane.showMessageDialog(this, "Vyplňte prosím všechna pole", "Chyba", JOptionPane.ERROR_MESSAGE);
                 return;
             }
+            if (!jmeno.matches("^[A-Z]?[a-z]+$")){
+                JOptionPane.showMessageDialog(this, "Zadejte platné jméno", "Chyba", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (!prijmeni.matches("^[A-Z]?[a-z]+$")){
+                JOptionPane.showMessageDialog(this, "Zadejte platné příjmení", "Chyba", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
 
             if (!email.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
                 JOptionPane.showMessageDialog(this, "Zadejte platný e-mail", "Chyba", JOptionPane.ERROR_MESSAGE);

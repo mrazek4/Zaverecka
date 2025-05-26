@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+
 /**
  * Okno pro zobrazeni seznamu rezervaci s moznosti filtrovani, hledani a ruseni.
  */
@@ -14,10 +15,12 @@ public class ZobrazitRezervace extends JFrame {
 
     private Uzivatel prihlasenyUzivatel;
     private boolean jeAdmin;
+
     /**
      * Vytvori okno pro zobrazeni rezervaci pro uzivatele nebo admina.
+     *
      * @param prihlasenyUzivatel aktualne prihlaseny uzivatel (null pokud je admin)
-     * @param jeAdmin true pokud je prihlaseny uzivatel administrator
+     * @param jeAdmin            true pokud je prihlaseny uzivatel administrator
      */
     public ZobrazitRezervace(Uzivatel prihlasenyUzivatel, boolean jeAdmin) {
         this.prihlasenyUzivatel = prihlasenyUzivatel;
@@ -93,9 +96,17 @@ public class ZobrazitRezervace extends JFrame {
         filtrTyp.addActionListener(e -> aktualizujSeznam());
 
         hledatField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-            public void changedUpdate(javax.swing.event.DocumentEvent e) { aktualizujSeznam(); }
-            public void removeUpdate(javax.swing.event.DocumentEvent e) { aktualizujSeznam(); }
-            public void insertUpdate(javax.swing.event.DocumentEvent e) { aktualizujSeznam(); }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                aktualizujSeznam();
+            }
+
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                aktualizujSeznam();
+            }
+
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                aktualizujSeznam();
+            }
         });
 
         zobrazitZruseneCheck.addActionListener(e -> aktualizujSeznam());
@@ -114,20 +125,28 @@ public class ZobrazitRezervace extends JFrame {
         vsechny.sort((r1, r2) -> r1.getTermin().compareTo(r2.getTermin()));
 
         for (Rezervace r : vsechny) {
-            boolean jeMoje = jeAdmin || (prihlasenyUzivatel != null &&
-                    r.getEmail().equalsIgnoreCase(prihlasenyUzivatel.getEmail()));
-            boolean odpovidaTypu = (vybranyTyp == null || r.getTypNavstevy() == vybranyTyp);
-            boolean odpovidaHledani = r.getJmeno().toLowerCase().contains(hledat)
-                    || r.getEmail().toLowerCase().contains(hledat);
-            boolean odpovidaZruseni = zobrazitZrusene || !r.isZrusena();
+            boolean patriUzivateli = jeAdmin || (
+                    prihlasenyUzivatel != null &&
+                            r.getEmail().equalsIgnoreCase(prihlasenyUzivatel.getEmail())
+            );
 
-            if (jeMoje && odpovidaTypu && odpovidaHledani && odpovidaZruseni) {
+            boolean odpovidaTypu = (vybranyTyp == null || r.getTypNavstevy() == vybranyTyp);
+            boolean odpovidaHledani = hledat.isEmpty()
+                    || r.getJmeno().toLowerCase().contains(hledat)
+                    || r.getEmail().toLowerCase().contains(hledat);
+            boolean jeViditelna = zobrazitZrusene || !r.isZrusena();
+
+            if (patriUzivateli && odpovidaTypu && odpovidaHledani && jeViditelna) {
                 model.addElement(r);
             }
         }
 
         if (model.isEmpty()) {
-            model.addElement(new Rezervace("Žádné rezervace", "", "", 0, "N/A", TypNavstevy.PREVENTIVNI));
+            seznam.setListData(new Rezervace[]{});
+            seznam.setEnabled(false);
+        } else {
+            seznam.setEnabled(true);
         }
     }
+
 }
