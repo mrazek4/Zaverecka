@@ -1,5 +1,6 @@
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -35,7 +36,7 @@ public class RezervaceSpravceTest {
     void testVolnyDen() {
         String datum = "2025-06-03";
         RezervaceSpravce.pridatRezervaci(new Rezervace("Test", "User", "t@t.cz", 1, datum + " 08:00", TypNavstevy.KONTROLA));
-        assertFalse(RezervaceSpravce.jeDenPlneObsazen(datum));
+        Assertions.assertFalse(RezervaceSpravce.jeDenPlneObsazen(datum));
     }
 
     @Test
@@ -44,6 +45,6 @@ public class RezervaceSpravceTest {
         RezervaceSpravce.pridatRezervaci(r);
         RezervaceSpravce.odstranitRezervaci(r);
 
-        assertFalse(RezervaceSpravce.getSeznamRezervaci().contains(r), "Rezervace by mela byt odebrana");
+        Assertions.assertFalse(RezervaceSpravce.getSeznamRezervaci().contains(r), "Rezervace by mela byt odebrana");
     }
 }

@@ -1,7 +1,4 @@
 import javax.swing.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
 
 
 /**
@@ -11,17 +8,17 @@ public class Spusteni {
     /**
      * Spousti hlavni okno aplikace a zajistuje nacteni dat.
      */
-    public void spusteni() {
+    public void spusteni() {//chatGPT
 
         SwingUtilities.invokeLater(() -> {
             HlavniOkno okno = new HlavniOkno();
 
-            // === Načti uživatele a rezervace ===
+            //Nacti uzivatele a rezervace
             okno.nacistUzivatele("uzivatele.txt");
             RezervaceSpravce.nacistZeSouboru("rezervace.txt");
 
-            // === Při zavření ulož všechno ===
-            okno.addWindowListener(new java.awt.event.WindowAdapter() {
+            //Pri zavreni uloz vsechno
+            okno.addWindowListener(new java.awt.event.WindowAdapter() { //automaticky se vsechno uklada pri zavreni
                 @Override
                 public void windowClosing(java.awt.event.WindowEvent e) {
                     okno.ulozitUzivatele("uzivatele.txt");

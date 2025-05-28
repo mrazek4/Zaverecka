@@ -10,7 +10,7 @@ public class PrihlaseniFormular extends JFrame {
      * Rozhrani pro oznameni o uspesnem prihlaseni uzivatele.
      */
     public interface PrihlaseniListener {
-        void onUzivatelPrihlasen(Uzivatel uzivatel);
+        void onUzivatelPrihlasen(Uzivatel uzivatel); //iterface, callback, kdyz se uzivatel prihlasi, zavola se tahle metoda ChatGPT
     }
     /**
      * Vytvori formular pro prihlaseni pacienta.
@@ -29,7 +29,7 @@ public class PrihlaseniFormular extends JFrame {
 
         prihlasitBtn.addActionListener(e -> {
             String email = emailF.getText().trim();
-            String heslo = new String(hesloF.getPassword()).trim();
+            String heslo = new String(hesloF.getPassword()).trim(); //heslo se prevadi na String misto charu
 
             if (email.isEmpty() || heslo.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Zadejte e-mail i heslo.", "Chyba", JOptionPane.ERROR_MESSAGE);
@@ -45,7 +45,7 @@ public class PrihlaseniFormular extends JFrame {
 
                     JOptionPane.showMessageDialog(this, "Přihlášení úspěšné!");
                     listener.onUzivatelPrihlasen(u);
-                    dispose();
+                    dispose();//kdyz se prihlasi, zavre se okno
                     return;
                 }
             }

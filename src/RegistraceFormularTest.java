@@ -6,8 +6,8 @@ class RegistraceFormularTest {
     // Regex z registrace
     private final String regexEmail = "^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$";
     private final String regexTelefon = "^(\\+420|00420)?\\s?\\d{3}\\s?\\d{3}\\s?\\d{3}$";
-    private final String regexJmeno = "^[A-Z]?[a-z]+$";
-    private final String regexPrijmeni = "^[A-Z]?[a-z]+$";
+    private final String regexJmeno = "^([A-ZÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ]?[a-záčďéěíňóřšťúůýž]+)$";
+    private final String regexPrijmeni = "^([A-ZÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ]?[a-záčďéěíňóřšťúůýž]+)$";
 
     @Test
     void testPlatneEmaily() {
@@ -44,7 +44,7 @@ class RegistraceFormularTest {
     void testPlatneJmeno() {
         assertTrue("Jan".matches(regexJmeno));
         assertTrue("Jakub".matches(regexJmeno));
-        assertTrue("buko".matches(regexJmeno));
+        assertTrue("dráčik".matches(regexJmeno));
         assertTrue("buzz".matches(regexJmeno));
     }
 
@@ -54,5 +54,19 @@ class RegistraceFormularTest {
         assertFalse("j4".matches(regexJmeno));
         assertFalse("§§".matches(regexJmeno));
         assertFalse("A".matches(regexJmeno));
+    }
+    @Test
+    void testPlatnePrijmeni() {
+        assertTrue("Bukovjan".matches(regexPrijmeni));
+        assertTrue("Hanzlík".matches(regexPrijmeni));
+        assertTrue("peříčko".matches(regexPrijmeni));
+        assertTrue("bartak".matches(regexPrijmeni));
+    }
+    @Test
+    void testNeplatnePrijmeni() {
+        assertFalse("55".matches(regexPrijmeni));
+        assertFalse("¨¨".matches(regexPrijmeni));
+        assertFalse("=".matches(regexPrijmeni));
+        assertFalse("  ".matches(regexPrijmeni));
     }
 }

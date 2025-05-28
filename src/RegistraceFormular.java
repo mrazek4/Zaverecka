@@ -17,7 +17,7 @@ public class RegistraceFormular extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        // === Vstupní pole ===
+        // Vstupni pole
         JTextField jmenoF = new JTextField(20);
         JTextField prijmeniF = new JTextField(20);
         JTextField emailF = new JTextField(20);
@@ -32,19 +32,19 @@ public class RegistraceFormular extends JFrame {
             String prijmeni = prijmeniF.getText().trim();
             String email = emailF.getText().trim();
             String telefon = telefonF.getText().trim();
-            String heslo = new String(hesloF.getPassword()).trim();
+            String heslo = new String(hesloF.getPassword()).trim(); //prevod charu na String
             Pojistovna pojistovna = (Pojistovna) pojistovnaBox.getSelectedItem();
 
-            // === Validace ===
+            // Validace
             if (jmeno.isEmpty() || prijmeni.isEmpty() || email.isEmpty() || telefon.isEmpty() || heslo.isEmpty() || pojistovna == null) {
                 JOptionPane.showMessageDialog(this, "Vyplňte prosím všechna pole", "Chyba", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            if (!jmeno.matches("^[A-Z]?[a-z]+$")){
+            if (!jmeno.matches("^([A-ZÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ][a-záčďéěíňóřšťúůýž]+)?\\s+([A-ZÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ][a-záčďéěíňóřšťúůýž]+)$")){
                 JOptionPane.showMessageDialog(this, "Zadejte platné jméno", "Chyba", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            if (!prijmeni.matches("^[A-Z]?[a-z]+$")){
+            if (!prijmeni.matches("^([A-ZÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ][a-záčďéěíňóřšťúůýž]+)?\\s+([A-ZÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ][a-záčďéěíňóřšťúůýž]+)")){
                 JOptionPane.showMessageDialog(this, "Zadejte platné příjmení", "Chyba", JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -74,7 +74,7 @@ public class RegistraceFormular extends JFrame {
                     jmeno,
                     prijmeni,
                     email,
-                    telefon.replaceAll("\\s+", ""),
+                    telefon.replaceAll("\\s+", ""),//ukladani bez mezer, \\s libovolny bily znak
                     heslo,
                     false,
                     pojistovna
@@ -86,7 +86,7 @@ public class RegistraceFormular extends JFrame {
             dispose();
         });
 
-        // === Rozvržení ===
+        // Rozvržení
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);

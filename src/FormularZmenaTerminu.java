@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.List;
 
 import org.jdatepicker.impl.*;
+
 /**
  * Formular pro zmenu terminu stavajici rezervace.
  */
@@ -14,8 +15,10 @@ public class FormularZmenaTerminu extends JFrame {
     private JComboBox<String> casBox;
     private JDatePickerImpl datePicker;
     private Rezervace rezervace;
+
     /**
      * Vytvori formular pro zmenu terminu rezervace.
+     *
      * @param rezervace rezervace, ktera se ma upravit
      */
     public FormularZmenaTerminu(Rezervace rezervace) {
@@ -23,22 +26,23 @@ public class FormularZmenaTerminu extends JFrame {
 
         setTitle("Změna termínu");
         setSize(400, 250);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null); // vycentrovani okna na obrazovku
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //zavreni pouze tohoto okna, ne celeho projektu
 
         String[] vsechnyCasy = {"08:00", "09:00", "10:00", "11:00", "13:00", "14:00", "15:00"};
 
-        UtilDateModel model = new UtilDateModel();
-        Properties p = new Properties();
+        UtilDateModel model = new UtilDateModel(); //model pro komponentu, vyber data
+        Properties p = new Properties(); //texty pro kalendar
         p.put("text.today", "Dnes");
         p.put("text.month", "Měsíc");
         p.put("text.year", "Rok");
+
         JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
         datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
 
         casBox = new JComboBox<>();
 
-        datePicker.addActionListener(e -> aktualizujVolneCasy());
+        datePicker.addActionListener(e -> aktualizujVolneCasy()); //pri zmene data se aktualizujou casy
 
         JButton potvrdit = new JButton("Potvrdit změnu");
         potvrdit.addActionListener(e -> {
@@ -50,8 +54,8 @@ public class FormularZmenaTerminu extends JFrame {
                 return;
             }
 
-            LocalDate datum = new java.sql.Date(((java.util.Date) vybraneDatum).getTime()).toLocalDate();
-            String novyTermin = datum.format(DateTimeFormatter.ISO_DATE) + " " + cas;
+            LocalDate datum = new java.sql.Date(((java.util.Date) vybraneDatum).getTime()).toLocalDate(); //prevedeni data na local date
+            String novyTermin = datum.format(DateTimeFormatter.ISO_DATE) + " " + cas;//spojeni data a casu do vybraneho formatu
 
             if (RezervaceSpravce.existujeRezervaceNaTermin(novyTermin)) {
                 JOptionPane.showMessageDialog(this, "Tento termín je již obsazen.", "Chyba", JOptionPane.WARNING_MESSAGE);
@@ -61,12 +65,12 @@ public class FormularZmenaTerminu extends JFrame {
             rezervace.setTermin(novyTermin);
             RezervaceSpravce.ulozitDoSouboru("rezervace.txt");
             JOptionPane.showMessageDialog(this, "Termín byl úspěšně změněn.");
-            dispose();
+            dispose();//ulozi zmenu zobrazi potvrzeni, zavre okno
         });
 
-        // === Rozvržení ===
+        // Rozvržení
         JPanel panel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
+        GridBagConstraints gbc = new GridBagConstraints(); // urcuje pozici komponent
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
@@ -95,17 +99,16 @@ public class FormularZmenaTerminu extends JFrame {
         List<String> volneCasy = new ArrayList<>();
 
         Object vybraneDatum = datePicker.getModel().getValue();
-        if (vybraneDatum == null) return;
+        if (vybraneDatum == null) return; //kdyz datum neni vybrane, metoda konci
 
-        LocalDate datum = new java.sql.Date(((java.util.Date) vybraneDatum).getTime()).toLocalDate();
+        LocalDate datum = new java.sql.Date(((java.util.Date) vybraneDatum).getTime()).toLocalDate();//prevod na local date
         String datumText = datum.format(DateTimeFormatter.ISO_DATE);
 
         for (String cas : vsechnyCasy) {
             String termin = datumText + " " + cas;
 
-            // Povolit čas, pokud:
-            // - je volný
-            // - nebo pokud je to ten původní čas této rezervace
+
+            //   povolit je volny nebo pokud je to ten původní čas této rezervace
             if (!RezervaceSpravce.existujeRezervaceNaTermin(termin) || rezervace.getTermin().equals(termin)) {
                 volneCasy.add(cas);
             }
@@ -120,8 +123,8 @@ public class FormularZmenaTerminu extends JFrame {
         }
     }
 
-    public static class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
-        private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    public static class DateLabelFormatter extends JFormattedTextField.AbstractFormatter { //trida pro formatovani adatumu v kalendari
+        private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");//definice formtu
 
         @Override
         public Object stringToValue(String text) {
@@ -129,7 +132,7 @@ public class FormularZmenaTerminu extends JFrame {
         }
 
         @Override
-        public String valueToString(Object value) {
+        public String valueToString(Object value) {//prevod mezi String a local date
             if (value != null) {
                 Calendar cal = (Calendar) value;
                 LocalDate date = new java.sql.Date(cal.getTimeInMillis()).toLocalDate();

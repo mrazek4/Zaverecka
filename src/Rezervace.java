@@ -9,7 +9,7 @@ public class Rezervace {
     private int telefonC;
     private String termin; // YYYY-MM-DD HH:MM
     private TypNavstevy typNavstevy;
-    private boolean zrusena; // NOVÉ
+    private boolean zrusena;
 
     public Rezervace(String jmeno, String prijmeni, String email, int telefonC, String termin, TypNavstevy typNavstevy) {
         this.jmeno = jmeno;
@@ -21,7 +21,7 @@ public class Rezervace {
         this.zrusena = false;
     }
 
-    // === Gettery a settery ===
+
 
     public String getJmeno() {
         return jmeno;
@@ -59,8 +59,8 @@ public class Rezervace {
         this.zrusena = zrusena;
     }
 
-    // === Zápis do souboru ===
-    public String toFileString() {
+    // Zapisovani do souboru
+    public String toFileString() { //serializace, prevedeni objektu rezervace na radek idealni pro ulozeni do textaku
         return jmeno + ";" + prijmeni + ";" + email + ";" + telefonC + ";" + termin + ";" + typNavstevy.name() + ";" + zrusena;
     }
 
@@ -70,7 +70,7 @@ public class Rezervace {
      * @param radek radek textu
      * @return objekt rezervace nebo null pri chybe
      */
-    public static Rezervace fromFileString(String radek) {
+    public static Rezervace fromFileString(String radek) { //prevedeni zpet na obejkt
         String[] casti = radek.split(";");
         try {
             if (casti.length == 7) {
@@ -102,10 +102,10 @@ public class Rezervace {
         }
     }
 
-    // === Pro zobrazení ===
+
     @Override
     public String toString() {
-        return (zrusena ? "[ZRUŠENO] " : "") +
+        return (zrusena ? "[ZRUŠENO] " : "") +//zkraceny zapis if else, if zrusena==true, jiank ""
                 jmeno + " " + prijmeni +
                 ", Email: " + email +
                 ", Tel: " + telefonC +

@@ -3,6 +3,7 @@ import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashSet;
+
 /**
  * Hlavni okno aplikace, ktere slouzi jako vychozi bod pro prihlaseni, registraci a navigaci.
  */
@@ -11,8 +12,9 @@ public class HlavniOkno extends JFrame {
     private Uzivatel prihlasenyUzivatel = null;
     private ArrayList<Uzivatel> uzivatele = new ArrayList<>();
 
-    private JPanel mainPanel;
-    private CardLayout cardLayout;
+    private JPanel mainPanel; //hlavni panel okna
+    private CardLayout cardLayout; //prepinani obrazovek
+
     /**
      * Vytvori nove hlavni okno aplikace a inicializuje vsechny komponenty a posluchace.
      */
@@ -20,17 +22,17 @@ public class HlavniOkno extends JFrame {
         setTitle("Rezervace do ordinace");
         setSize(700, 500);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //ukoncnei aplikace pri zavreni
 
         JLabel nadpis = new JLabel("Vítejte v rezervačním systému", JLabel.CENTER);
-        nadpis.setFont(new Font("SansSerif", Font.BOLD, 18));
+        nadpis.setFont(new Font("SansSerif", Font.BOLD, 18)); //font na nadpis
         add(nadpis, BorderLayout.NORTH);
 
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
         add(mainPanel, BorderLayout.CENTER);
 
-        // === Přihlašovací panel ===
+        // Přihlašovací panel
         JPanel panelPrihlaseni = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
 
         JButton btnPrihlasitPacient = new JButton("Přihlásit se jako pacient");
@@ -46,7 +48,7 @@ public class HlavniOkno extends JFrame {
         panelPrihlaseni.add(Box.createVerticalStrut(20));
         panelPrihlaseni.add(btnOAplikaci);
 
-        // === Panel pro pacienta ===
+        // Panel pro pacienta
         JPanel panelPacient = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
         JButton btnRezervovat = new JButton("Rezervovat termín");
         JButton btnZobrazit = new JButton("Zobrazit rezervace");
@@ -58,7 +60,7 @@ public class HlavniOkno extends JFrame {
         panelPacient.add(btnZmenaHesla);
         panelPacient.add(btnOdhlasit);
 
-        // === Panel pro admina ===
+        // Panel pro admina
         JPanel panelAdmin = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
         JButton btnZobrazitA = new JButton("Zobrazit rezervace");
         JButton btnZmenaHeslaA = new JButton("Změnit heslo");
@@ -70,12 +72,12 @@ public class HlavniOkno extends JFrame {
         panelAdmin.add(btnStatistika);
         panelAdmin.add(btnOdhlasitA);
 
-        // === Přidání panelů ===
+        // Přidání panelů
         mainPanel.add(panelPrihlaseni, "login");
         mainPanel.add(panelPacient, "pacient");
         mainPanel.add(panelAdmin, "admin");
 
-        // === Přihlášení pacient ===
+        // Přihlášení pacient
         btnPrihlasitPacient.addActionListener(e -> {
             new PrihlaseniFormular(uzivatele, uzivatel -> {
                 prihlasenyUzivatel = uzivatel;
@@ -84,9 +86,9 @@ public class HlavniOkno extends JFrame {
             }).setVisible(true);
         });
 
-        // === Přihlášení admin ===
+        // Přihlášení admin
         btnPrihlasitAdmin.addActionListener(e -> {
-            JPanel loginPanel = new JPanel(new GridLayout(2, 2));
+            JPanel loginPanel = new JPanel(new GridLayout(2, 2)); //2 radky 2 sloupce
             JTextField jmenoField = new JTextField();
             JPasswordField hesloField = new JPasswordField();
             loginPanel.add(new JLabel("Jméno:"));
@@ -94,14 +96,14 @@ public class HlavniOkno extends JFrame {
             loginPanel.add(new JLabel("Heslo:"));
             loginPanel.add(hesloField);
 
-            int result = JOptionPane.showConfirmDialog(this, loginPanel, "Přihlášení admina", JOptionPane.OK_CANCEL_OPTION);
-            if (result == JOptionPane.OK_OPTION) {
+            int result = JOptionPane.showConfirmDialog(this, loginPanel, "Přihlášení admina", JOptionPane.OK_CANCEL_OPTION);//otevre okno s formularem
+            if (result == JOptionPane.OK_OPTION) {// pokud kliknul na ok
                 String jmeno = jmenoField.getText();
-                String heslo = new String(hesloField.getPassword());
+                String heslo = new String(hesloField.getPassword());//vytvari nove heslo protoye getPassword vraci char
 
                 for (Uzivatel u : uzivatele) {
                     if (u.getJmeno().equals(jmeno) && u.getHeslo().equals(heslo) && u.isJeAdmin()) {
-                        jeAdminPrihlasen = true;
+                        jeAdminPrihlasen = true;//overeni ze je admin
                         prihlasenyUzivatel = null;
                         cardLayout.show(mainPanel, "admin");
                         JOptionPane.showMessageDialog(this, "Přihlášení jako admin bylo úspěšné.");
@@ -112,7 +114,7 @@ public class HlavniOkno extends JFrame {
             }
         });
 
-        // === Registrace ===
+        // Registrace
         btnRegistrovat.addActionListener(e -> new RegistraceFormular(uzivatele).setVisible(true));
 
         // === O aplikaci ===
@@ -132,17 +134,17 @@ public class HlavniOkno extends JFrame {
                     JOptionPane.INFORMATION_MESSAGE);
         });
 
-        // === Akce pacienta ===
+        // Akce pacienta
         btnRezervovat.addActionListener(e -> new RezervaceFormular(prihlasenyUzivatel).setVisible(true));
         btnZobrazit.addActionListener(e -> new ZobrazitRezervace(prihlasenyUzivatel, false).setVisible(true));
         btnZmenaHesla.addActionListener(e -> zmenitHeslo(prihlasenyUzivatel));
         btnOdhlasit.addActionListener(e -> {
             prihlasenyUzivatel = null;
             cardLayout.show(mainPanel, "login");
-            JOptionPane.showMessageDialog(this, "Byl jste úspěšně odhlášen.");
+            JOptionPane.showMessageDialog(this, "Byl jste odhlášen.");
         });
 
-        // === Akce admina ===
+        // Akce admina
         btnZobrazitA.addActionListener(e -> new ZobrazitRezervace(null, true).setVisible(true));
         btnZmenaHeslaA.addActionListener(e -> zmenitHeslo(najdiAdmina()));
         btnStatistika.addActionListener(e -> new StatistikaOkno().setVisible(true));
@@ -152,11 +154,13 @@ public class HlavniOkno extends JFrame {
             JOptionPane.showMessageDialog(this, "Admin byl odhlášen.");
         });
 
-        // === Načti uživatele ===
+        // Načti uživatele
         nacistUzivatele("uzivatele.txt");
     }
+
     /**
      * Zmeni heslo pro daneho uzivatele.
+     *
      * @param uzivatel uzivatel, ktery chce zmenit heslo
      */
     private void zmenitHeslo(Uzivatel uzivatel) {
@@ -203,15 +207,19 @@ public class HlavniOkno extends JFrame {
             JOptionPane.showMessageDialog(this, "Heslo bylo úspěšně změněno.");
         }
     }
+
     /**
      * Vrati prvniho uzivatele, ktery ma roli administratora.
+     *
      * @return admin uzivatel nebo null pokud neni nalezen
      */
     private Uzivatel najdiAdmina() {
         return uzivatele.stream().filter(Uzivatel::isJeAdmin).findFirst().orElse(null);
     }
+
     /**
      * Ulozi seznam uzivatelu do souboru.
+     *
      * @param soubor cesta k souboru
      */
     public void ulozitUzivatele(String soubor) {
@@ -230,6 +238,7 @@ public class HlavniOkno extends JFrame {
 
     /**
      * Nacte seznam uzivatelu ze souboru a doplni defaultniho admina pokud chybi.
+     *
      * @param soubor cesta k souboru
      */
     public void nacistUzivatele(String soubor) {

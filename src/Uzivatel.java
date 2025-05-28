@@ -72,8 +72,8 @@ public class Uzivatel {
         String email = casti[2];
         String telefon = casti[3];
         String heslo = casti[4];
-        boolean jeAdmin = Boolean.parseBoolean(casti[5]);
-        Pojistovna pojistovna = Pojistovna.valueOf(casti[6]);
+        boolean jeAdmin = Boolean.parseBoolean(casti[5]);//String na boolean
+        Pojistovna pojistovna = Pojistovna.valueOf(casti[6]);//String na enum
 
         return new Uzivatel(jmeno, prijmeni, email, telefon, heslo, jeAdmin, pojistovna);
     }

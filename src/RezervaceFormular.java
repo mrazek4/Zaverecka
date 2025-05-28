@@ -50,14 +50,14 @@ public class RezervaceFormular extends JFrame {
 
         typNavstevyBox = new JComboBox<>(TypNavstevy.values());
 
-        // === Datum ===
+        // Datum
         UtilDateModel model = new UtilDateModel();
         Properties p = new Properties();
         p.put("text.today", "Dnes");
         p.put("text.month", "Měsíc");
         p.put("text.year", "Rok");
         JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
-        datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
+        datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());//vytvoreni kalendare pomoci knihovny JDatePicker
 
         // === Čas ===
         casBox = new JComboBox<>();
@@ -67,10 +67,10 @@ public class RezervaceFormular extends JFrame {
         datePicker.addActionListener(e -> {
             Object vybraneDatum = datePicker.getModel().getValue();
             if (vybraneDatum != null) {
-                java.util.Date selectedDate = (java.util.Date) vybraneDatum;
-                LocalDate datum = new java.sql.Date(selectedDate.getTime()).toLocalDate();
-                String datumText = datum.format(DateTimeFormatter.ISO_DATE);
-                aktualizujCasyProDatum(datumText);
+                java.util.Date selectedDate = (java.util.Date) vybraneDatum; //pretypovani obejct na java.until.date aby se s nim dale dalo pracovat
+                LocalDate datum = new java.sql.Date(selectedDate.getTime()).toLocalDate(); //prevedeni date na local date
+                String datumText = datum.format(DateTimeFormatter.ISO_DATE); //prevedeni data na string
+                aktualizujCasyProDatum(datumText);//voalni metody ktera aktualizuje casy
 
                 if (RezervaceSpravce.jeDenPlneObsazen(datumText)) {
                     JOptionPane.showMessageDialog(this, "Tento den je plně obsazen.", "Upozornění", JOptionPane.WARNING_MESSAGE);
@@ -118,7 +118,7 @@ public class RezervaceFormular extends JFrame {
             dispose();
         });
 
-        // === Rozvržení ===
+        // Rozvržení
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -195,7 +195,7 @@ public class RezervaceFormular extends JFrame {
         casBox.setModel(new DefaultComboBoxModel<>(volneCasy.toArray(new String[0])));
     }
 
-    // === Formátovač pro JDatePicker ===
+    // JDatePicker delano pres chatGPT
     public class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
         private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 

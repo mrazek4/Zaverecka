@@ -19,20 +19,20 @@ public class StatistikaOkno extends JFrame {
         int celkem = seznam.size();
         int zrusene = 0;
 
-        EnumMap<TypNavstevy, Integer> poTypu = new EnumMap<>(TypNavstevy.class);
+        EnumMap<TypNavstevy, Integer> poTypu = new EnumMap<>(TypNavstevy.class);//vytvoreni mapy pro pocitani typu navstevy https://docs.oracle.com/javase/8/docs/api/java/util/EnumMap.html
         for (TypNavstevy t : TypNavstevy.values()) {
-            poTypu.put(t, 0);
+            poTypu.put(t, 0);//nastaveni na 0
         }
 
         for (Rezervace r : seznam) {
             if (r.isZrusena()) zrusene++;
             TypNavstevy typ = r.getTypNavstevy();
-            poTypu.put(typ, poTypu.get(typ) + 1);
+            poTypu.put(typ, poTypu.get(typ) + 1); //pro kazdy typ nasvstevy se zvysi jeho pocet
         }
 
         JTextArea vystup = new JTextArea();
         vystup.setEditable(false);
-        vystup.append("📊 STATISTIKA\n\n");
+        vystup.append(" STATISTIKA\n\n");
         vystup.append("Celkový počet rezervací: " + celkem + "\n");
         vystup.append("Zrušené rezervace: " + zrusene + "\n\n");
         vystup.append("Rozdělení podle typu:\n");

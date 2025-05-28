@@ -6,7 +6,7 @@ import java.util.ArrayList;
  */
 public class RezervaceSpravce {
 
-    private static ArrayList<Rezervace> seznamRezervaci = new ArrayList<>();
+    private static ArrayList<Rezervace> seznamRezervaci = new ArrayList<>(); //static protoze je napric cele aplikace
 
     /**
      * Prida rezervaci do seznamu.
@@ -32,9 +32,10 @@ public class RezervaceSpravce {
      */
     public static boolean existujeRezervaceNaTermin(String termin) {
         for (Rezervace r : seznamRezervaci) {
-            if (r.getTermin().equals(termin) && !r.isZrusena()) {
-                return true;
-            }
+            if (!r.isZrusena())
+                if (r.getTermin().equals(termin)) {
+                    return true;
+                }
         }
         return false;
     }
@@ -46,7 +47,7 @@ public class RezervaceSpravce {
     public static boolean jeDenPlneObsazen(String datum) {
         int pocet = 0;
         for (Rezervace r : seznamRezervaci) {
-            if (r.getTermin().startsWith(datum)) {
+            if (r.getTermin().startsWith(datum)) { //startsWith kontroluje jestli je to datum
                 pocet++;
             }
         }
@@ -83,7 +84,7 @@ public class RezervaceSpravce {
         try (BufferedReader br = new BufferedReader(new FileReader(cesta))) {
             String radek;
             while ((radek = br.readLine()) != null) {
-                Rezervace r = Rezervace.fromFileString(radek);
+                Rezervace r = Rezervace.fromFileString(radek); //prevedeni na obejkt
                 if (r != null) {
                     seznamRezervaci.add(r);
                 }
