@@ -66,7 +66,7 @@ public class ZobrazitRezervace extends JFrame {
         JScrollPane scrollPane = new JScrollPane(seznam);
         add(scrollPane, BorderLayout.CENTER);
 
-        // === Tlacitka ===
+        // Tlacitka
         JPanel tlacitkaPanel = new JPanel();
 
         if (!jeAdmin && prihlasenyUzivatel != null) {
@@ -105,7 +105,7 @@ public class ZobrazitRezervace extends JFrame {
 
         if (jeAdmin) {
             hledatField.getDocument().addDocumentListener(new DocumentListener() {
-                public void changedUpdate(DocumentEvent e) { aktualizujSeznam(); }
+                public void changedUpdate(DocumentEvent e) { aktualizujSeznam(); }//kdyz se meni text v poli seznam se aktualizuje
                 public void removeUpdate(DocumentEvent e) { aktualizujSeznam(); }
                 public void insertUpdate(DocumentEvent e) { aktualizujSeznam(); }
             });

@@ -40,11 +40,11 @@ public class RegistraceFormular extends JFrame {
                 JOptionPane.showMessageDialog(this, "Vyplňte prosím všechna pole", "Chyba", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            if (!jmeno.matches("^([A-ZÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ][a-záčďéěíňóřšťúůýž]+)?\\s+([A-ZÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ][a-záčďéěíňóřšťúůýž]+)$")){
+            if (!jmeno.matches("^([A-ZÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ]?[a-záčďéěíňóřšťúůýž]+)$")){
                 JOptionPane.showMessageDialog(this, "Zadejte platné jméno", "Chyba", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            if (!prijmeni.matches("^([A-ZÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ][a-záčďéěíňóřšťúůýž]+)?\\s+([A-ZÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ][a-záčďéěíňóřšťúůýž]+)")){
+            if (!prijmeni.matches("^([A-ZÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ]?[a-záčďéěíňóřšťúůýž]+)$")){
                 JOptionPane.showMessageDialog(this, "Zadejte platné příjmení", "Chyba", JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -65,8 +65,9 @@ public class RegistraceFormular extends JFrame {
                     JOptionPane.showMessageDialog(this, "Uživatel s tímto e-mailem už existuje!", "Chyba", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                if (u.getTelefon().equalsIgnoreCase(telefon)) {
+                if (u.getTelefon().replaceAll("\\s+", "").equalsIgnoreCase(telefon.replaceAll("\\s+", ""))) {
                     JOptionPane.showMessageDialog(this, "Uživatel s tímto cislem už existuje", "Chyba", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
             }
 

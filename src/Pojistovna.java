@@ -20,7 +20,6 @@ public enum Pojistovna {
 
     @Override
     public String toString() {
-        return "Pojistovna" +
-                "nazev" + nazev;
+        return nazev;
     }
 }
