@@ -50,7 +50,7 @@ public class RegistraceFormular extends JFrame {
             }
 
 
-            if (!email.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
+            if (!email.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,4}$")) {//https://regexr.com/3e48o
                 JOptionPane.showMessageDialog(this, "Zadejte platný e-mail", "Chyba", JOptionPane.ERROR_MESSAGE);
                 return;
             }
