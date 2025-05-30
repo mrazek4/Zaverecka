@@ -121,10 +121,10 @@ public class HlavniOkno extends JFrame {
         btnOAplikaci.addActionListener(e -> {
             JOptionPane.showMessageDialog(this,
                     "O aplikaci:\n" +
-                            "Rezervační systém pro ordinaci\n" +
+                            "Rezervační systém\n" +
                             "Autor: Mrazek Jakub\n" +
                             "Verze: 1.0\n" +
-                            "Datum: 2025\n\n" +
+                            "Rok vydání: 2025\n\n" +
                             "Funkce:\n" +
                             "- Přihlášení a registrace\n" +
                             "- Rezervace termínů\n" +
@@ -255,9 +255,6 @@ public class HlavniOkno extends JFrame {
             System.err.println("Chyba při načítání uživatelů: " + e.getMessage());
         }
 
-        boolean existujeAdmin = uzivatele.stream().anyMatch(Uzivatel::isJeAdmin);
-        if (!existujeAdmin) {
-            uzivatele.add(new Uzivatel("admin", "Admin", "admin@ordinace.cz", "123456789", "heslo123", true, Pojistovna.VZP));
-        }
+
     }
 }
